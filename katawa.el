@@ -65,6 +65,7 @@
    ((eq katawa-backend 'google) (katawa-google-from-hiragana hiragana))
    (t (error "No backend is configured"))))
 
+;;;###autoload
 (defun katawa-get-some-candidates (src)
   "Transliterate Japanese text SRC using a configured backend.
 

@@ -43,8 +43,7 @@
   (ivy-read "katawa: "
             (lambda (string)
               (unless (string-empty-p string)
-                (katawa--candidates-from-hiragana
-                 (katawa-decode-romaji string))))
+                (katawa-get-some-candidates string)))
             :caller 'katawa-ivy
             :action #'insert
             :matcher (lambda (_ cands) cands)
@@ -57,8 +56,7 @@
       (ivy-read (format "katawa fix %s: " str)
                 (lambda (string)
                   (unless (string-empty-p string)
-                    (katawa--candidates-from-hiragana
-                     (katawa-decode-romaji string))))
+                    (katawa-get-some-candidates string)))
                 :caller 'katawa-ivy-fix
                 :initial-input str
                 :action (lambda (s)
