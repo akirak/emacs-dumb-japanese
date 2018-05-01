@@ -1,4 +1,4 @@
-# katawa.el
+# katawa.el [![Build Status](https://travis-ci.org/akirak/katawa.el.svg?branch=master)](https://travis-ci.org/akirak/katawa.el)
 
 katawa.el is yet another way to writing Japanese in Emacs. It is not a real
 input method for Emacs, but it provides a simple API which lets you produce
