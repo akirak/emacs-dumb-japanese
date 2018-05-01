@@ -38,10 +38,10 @@ The following configuration is an example:
 ``` emacs-lisp
 (use-package katawa
   :commands (katawa-ivy katawa-ivy-fix katawa-ivy-fix-at-point)
-  :config
+  :init
   (bind-keys :map text-mode-map
-             ("C-c j" . #'katawa-ivy)
-             ("C-c J" . #'katawa-ivy-fix)))
+             ("C-c j" . katawa-ivy)
+             ("C-c J" . katawa-ivy-fix)))
 
 ```
 
