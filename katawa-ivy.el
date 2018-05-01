@@ -32,6 +32,7 @@
 
 ;;; Code:
 
+(require 'subr-x)
 (require 'katawa)
 (require 'katawa-google)
 (require 'ivy)
@@ -46,7 +47,7 @@
                  (katawa-decode-romaji string))))
             :caller 'katawa-ivy
             :action #'insert
-            :matcher (lambda (reg cands) cands)
+            :matcher (lambda (_ cands) cands)
             :dynamic-collection t))
 
 (defun katawa-ivy--fix-region (start end)
@@ -64,7 +65,7 @@
                           (kill-region start end)
                           (goto-char start)
                           (insert s))
-                :matcher (lambda (reg cands) cands)
+                :matcher (lambda (_ cands) cands)
                 :dynamic-collection t))))
 
 (defun katawa-ivy-fix (start end)

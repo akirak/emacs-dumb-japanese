@@ -48,7 +48,8 @@
   "Company backend for katawa.
 
 COMMAND, ARG, and IGNORED follow the conventions of company."
-  (case command
+  (interactive (list 'interactive))
+  (cl-case command
     (interactive (company-begin-backend 'company-katawa-backend))
     (prefix (when (and (looking-at "\\_>")
                        (looking-back "[a-z][a-z,]*" nil t))

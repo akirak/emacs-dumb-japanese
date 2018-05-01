@@ -90,7 +90,7 @@ The selected candidate is returned as a string."
 (defun katawa-insert (romaji)
   "Interactively transliterates ROMAJI and insert the output text."
   (interactive "sEnter Japanese romaji to transliterate: ")
-  (insert (katawa-completing-read-romaji romaji)))
+  (insert (katawa-select romaji)))
 
 (provide 'katawa)
 ;;; katawa.el ends here
