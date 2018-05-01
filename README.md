@@ -37,8 +37,7 @@ FIXME
 insert Japanese text into the current buffer. If you enter *romaji*, i.e.
 Japanese text represented in alphabets, after the prompt, then the result
 is entered into the buffer. However, I suggest that you should use `katawa-ivy`
-command for this purpose, which is an Ivy equivalent supporting dynamic
-candidates.
+command for this purpose, which dynamically updates candidates as you supply input.
 
 ### Ivy
 
@@ -108,7 +107,7 @@ its capability is limited by the backend:
   the text temporarily in *hiragana* (ひらがな) but convert it into katakana using
   `japanese-katakana-region` command.
   
-`katawa-ivy` and its family sometimes suffers from an error returned by the
+`katawa-ivy` and its family sometimes suffer from an error returned by the
 Google CGI API and stops updating their candidates. In such a situation, you
 can abort the completion but resume it using `ivy-resume` command.
 
