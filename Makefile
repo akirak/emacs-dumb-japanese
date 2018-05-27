@@ -2,7 +2,7 @@ EMACS ?= cask emacs
 
 EMACS_BATCH = $(EMACS) -Q --batch --eval "(add-hook 'load-path \".\")"
 
-FILES = katawa.el katawa-ivy.el company-katawa.el
+FILES = katawa.el katawa-ivy.el company-katawa.el katawa-ivy-exwm.el
 
 default: package-lint byte-compile
 
