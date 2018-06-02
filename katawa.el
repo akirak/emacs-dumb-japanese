@@ -52,6 +52,7 @@
 
 (require 'katawa-decode)
 (require 'katawa-google)
+(require 'japan-util)
 
 ;;;###autoload
 (defcustom katawa-backend 'google
@@ -59,11 +60,19 @@
   :type '(choice (const :tag "Google CGI API" google))
   :group 'katawa)
 
+(defcustom katawa-add-katakana-candidate t
+  "Add a candidate with all of the input transliterated into Katakana."
+  :type 'boolean
+  :group 'katawa)
+
 (defun katawa--candidates-from-hiragana (hiragana)
   "Transliterate HIRAGANA into a full notation of Japanese."
-  (cond
-   ((eq katawa-backend 'google) (katawa-google-from-hiragana hiragana))
-   (t (error "No backend is configured"))))
+  (let ((result1 (cond
+                  ((eq katawa-backend 'google) (katawa-google-from-hiragana hiragana))
+                  (t (error "No backend is configured")))))
+    (if katawa-add-katakana-candidate
+        (add-to-list 'result1 (japanese-katakana hiragana) 't #'string-equal)
+      result1)))
 
 ;;;###autoload
 (defun katawa-get-some-candidates (src)
