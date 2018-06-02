@@ -1,18 +1,19 @@
 # katawa.el [![Build Status](https://travis-ci.org/akirak/katawa.el.svg?branch=master)](https://travis-ci.org/akirak/katawa.el)
 
-katawa.el is yet another way to writing Japanese in Emacs. It is not a real
+Katawa.el is a method to write Japanese in Emacs. It is not a real
 input method for Emacs, but it provides a simple API which lets you produce
-Japanese text in Emacs.
+Japanese text in Emacs via several completion interfaces.
 
-katawa.el may become extensible in the future, but it currently supports
-only one backend: a wrapper around [Google CGI API for Japanese Input][google_cgiapi]. 
-It doesn't require an offline dictionary on your computer, but it requires
-an internet connection.
+Katawa.el is designed to be backend-agnostic, i.e. you can use any function to generate candidates, but it currently ships with only [Google CGI API for Japanese Input][google_cgiapi]. This backend doesn't require an offline dictionary on your computer, but it requires an internet connection.
 
 [google_cgiapi]: https://www.google.co.jp/ime/cgiapi.html
 
-This package also ships with an Ivy interface for writing Japanese as well as
-a company backend. The company backend is experimental.
+Katawa.el can be integrated with various completion interfaces. The following frontend integrations are included in this package:
+
+- Simple `completion-read` interface
+- Ivy interface which inserts the result into the current buffer
+- Ivy interface which sends the result into an X window in EXWM
+- Company backend
 
 ## Prerequisites
 
@@ -47,7 +48,9 @@ The following configuration is an example:
 
 ## Usage
 
-### `katawa-insert`
+### Simple (`katawa.el`)
+
+#### `katawa-insert`
 
 `katawa-insert` interactive command, which is included in katawa.el, lets you
 insert Japanese text into the current buffer. If you enter *romaji*, i.e.
@@ -55,7 +58,7 @@ Japanese text represented in alphabets, after the prompt, then the result
 is entered into the buffer. However, I suggest that you should use `katawa-ivy`
 command for this purpose, which dynamically updates candidates as you supply input.
 
-### Ivy
+### Ivy (`katawa-ivy.el`)
 
 #### Inserting Japanese into the buffer
 
@@ -91,6 +94,10 @@ existing text. I recommend that you bind keys to these commands:
 
 [ivy-posframe](https://github.com/tumashu/ivy-posframe) may be what you want.
 It requires Emacs 26.
+
+### Ivy with EXWM support (`katawa-ivy-exwm.el`)
+
+`katawa-ivy-exwm` command is almost the same as `katawa-ivy`, but if the current buffer is an [EXWM](https://github.com/ch11ng/exwm/) buffer, it paste the result into an X window. This is convenient for performing a search with a few Japanese words inside a browser.
 
 ### Company
 
