@@ -67,6 +67,7 @@
                 (unless (string-empty-p string)
                   (katawa-get-some-candidates string)))
               :caller 'katawa-ivy-exwm
+              :history 'katawa-ivy-history
               :action (lambda (input)
                         (if (derived-mode-p 'exwm-mode)
                             (let ((inhibit-read-only t))

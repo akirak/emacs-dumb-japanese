@@ -37,6 +37,8 @@
 (require 'katawa-google)
 (require 'ivy)
 
+(defvar katawa-ivy-history nil)
+
 (defun katawa-ivy ()
   "Transliterate text into Japanese via an Ivy interface."
   (interactive)
@@ -45,6 +47,7 @@
               (unless (string-empty-p string)
                 (katawa-get-some-candidates string)))
             :caller 'katawa-ivy
+            :history 'katawa-ivy-history
             :action #'insert
             :matcher (lambda (_ cands) cands)
             :dynamic-collection t))
@@ -58,6 +61,7 @@
                   (unless (string-empty-p string)
                     (katawa-get-some-candidates string)))
                 :caller 'katawa-ivy-fix
+                :history 'katawa-ivy-history
                 :initial-input str
                 :action (lambda (s)
                           (kill-region start end)
