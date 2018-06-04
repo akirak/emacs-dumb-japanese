@@ -158,7 +158,7 @@ in the language, and katawa is intended to be a solution for that.
 
 ## Inspirations
 
-katawa was originally inspired by the following solutions:
+Katawa was originally inspired by the following solutions:
 
 - [Google IME SKK サーバー 作った](http://blog.sushi.money/entry/20110421/1303274561)
 - [ac-mozc](https://github.com/igjit/ac-mozc)
