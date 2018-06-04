@@ -97,7 +97,7 @@ It requires Emacs 26.
 
 ### Ivy with EXWM support (`katawa-ivy-exwm.el`)
 
-`katawa-ivy-exwm` command is almost the same as `katawa-ivy`, but if the current buffer is an [EXWM](https://github.com/ch11ng/exwm/) buffer, it paste the result into an X window. This is convenient for performing a search with a few Japanese words inside a browser.
+`katawa-ivy-exwm` command is almost the same as `katawa-ivy`, but if the current buffer is an [EXWM](https://github.com/ch11ng/exwm/) buffer, it pastes the result into the X window. This is convenient for performing a search with a few Japanese words inside a browser.
 
 ### Company
 
