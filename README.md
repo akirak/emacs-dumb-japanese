@@ -4,7 +4,7 @@ Katawa.el is a method to write Japanese in Emacs. It is not a real
 input method for Emacs, but it provides a simple API that allows you to produce some
 Japanese text in Emacs/EXWM via a completion interface. It is not suitable for writing a document in the language, but it can be used to insert a few words into a document in another language (e.g. English) or perform a search.
 
-Katawa.el is designed to be backend-agnostic, i.e. you can use any function to generate candidates, but it currently ships with only [Google CGI API for Japanese Input][google_cgiapi]. This backend doesn't require an offline dictionary on your computer, but it requires an internet connection.
+Katawa.el is designed to be backend-agnostic, i.e. you can use any function to generate candidates, but it currently ships with only a backend for [Google CGI API for Japanese Input][google_cgiapi]. This backend doesn't require an offline dictionary on your computer, but it requires an internet connection.
 
 [google_cgiapi]: https://www.google.co.jp/ime/cgiapi.html
 
