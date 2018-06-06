@@ -69,7 +69,7 @@ use emojis frequently, you may not want this replacement."
            ;; (not (string-match-p "^[[:unibyte:]]$" segment))
            )
       ;; TODO: Is there a faster implementation for replacement?
-      (replace-regexp-in-string "-" "ー" segment)
+      (replace-regexp-in-string "−" "ー" segment)
     segment))
 
 (cl-defun katawa-google--combine-candidates (l
