@@ -37,15 +37,6 @@
 
 (defvar katawa-google-url "http://www.google.com/transliterate")
 
-(defcustom katawa-google-replace-hyphens t
-  "When non-nil, replace \"-\"s in the result with \"ー\"s.
-
-The API by Google seems to return results with unibyte hyphens. If you write
-Japanese, hyphens probably should be multibyte (\"ー\") ones. However, if you
-use emojis frequently, you may not want this replacement."
-  :type 'boolean
-  :group 'katawa)
-
 (defun katawa-google--request (hiragana)
   "Transliterate HIRAGANA using the service by Google."
   (let ((resp (request katawa-google-url
@@ -104,9 +95,7 @@ N-LIMIT candidates are returned at maximum."
 (defun katawa-google-from-hiragana (hiragana)
   "Transliterate HIRAGANA and return a list of candidates."
   (katawa-google--combine-candidates
-   (mapcar (lambda (cans)
-             (mapcar #'katawa-google--postprocess-segment cans))
-           (katawa-google--request hiragana))))
+   (katawa-google--request hiragana)))
 
 ;;;###autoload
 (defun katawa-google-from-romaji (romaji)

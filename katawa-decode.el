@@ -101,6 +101,8 @@ SRC is a string which contains romaji."
                  (pcase cs
                    ;; End of the input sequence
                    ('() nil)
+                   (`(?- . ,rest)
+                    (cons "ー" rest))
                    ;; Non-alphabet characters are passed through
                    ((and `(,c . ,rest)
                          (guard (not (is-alpha c))))
