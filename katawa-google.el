@@ -37,6 +37,15 @@
 
 (defvar katawa-google-url "http://www.google.com/transliterate")
 
+(defcustom katawa-google-replace-hyphens t
+  "When non-nil, replace \"-\"s in the result with \"ー\"s.
+
+The API by Google seems to return results with unibyte hyphens. If you write
+Japanese, hyphens probably should be multibyte (\"ー\") ones. However, if you
+use emojis frequently, you may not want this replacement."
+  :type 'boolean
+  :group 'katawa)
+
 (defun katawa-google--request (hiragana)
   "Transliterate HIRAGANA using the service by Google."
   (let ((resp (request katawa-google-url
@@ -52,6 +61,16 @@
                     collect (cons (decode-coding-string src 'utf-8)
                                   (--map (decode-coding-string it 'utf-8) results))))
       (code (error "Returned HTTP %d from %s" code katawa-google-url)))))
+
+(defun katawa-google--postprocess-segment (segment)
+  "Post-process a candidate SEGMENT."
+  (if (and katawa-google-replace-hyphens
+           ;; TODO: Check if the segment is a proper Japanese word (not emoji).
+           ;; (not (string-match-p "^[[:unibyte:]]$" segment))
+           )
+      ;; TODO: Is there a faster implementation for replacement?
+      (replace-regexp-in-string "-" "ー" segment)
+    segment))
 
 (cl-defun katawa-google--combine-candidates (l
                                              &optional
@@ -85,7 +104,9 @@ N-LIMIT candidates are returned at maximum."
 (defun katawa-google-from-hiragana (hiragana)
   "Transliterate HIRAGANA and return a list of candidates."
   (katawa-google--combine-candidates
-   (katawa-google--request hiragana)))
+   (mapcar (lambda (cans)
+             (mapcar #'katawa-google--postprocess-segment cans))
+           (katawa-google--request hiragana))))
 
 ;;;###autoload
 (defun katawa-google-from-romaji (romaji)
