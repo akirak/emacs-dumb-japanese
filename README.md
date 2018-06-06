@@ -30,7 +30,7 @@ The following dependencies are optional:
 
 Use the following recipe:
 
-    (katawa :host github :repo "akirak/katawa.el")
+    (katawa :fetcher github :repo "akirak/katawa.el")
 
 ## Configuration
 
