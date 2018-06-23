@@ -26,17 +26,17 @@
 
 ;;; Commentary:
 
-;; katawa.el is yet another way to writing Japanese in Emacs. It is not a real
+;; katawa.el is yet another way to writing Japanese in Emacs.  It is not a real
 ;; input method for Emacs, but it provides a simple API which lets you produce
 ;; Japanese text in Emacs.
 
 ;; katawa.el may become extensible in the future, but it currently supports
-;; only one backend: a wrapper around [Google CGI API for Japanese Input][google_cgiapi]. 
+;; only one backend: a wrapper around [Google CGI API for Japanese Input][google_cgiapi].
 ;; It doesn't require an offline dictionary on your computer, but it requires
 ;; an internet connection.
 
 ;; katawa.el provides the following functions:
-;; 
+;;
 ;; - `katawa-insert' interactively reads a Roman representation of Japanese,
 ;;   transliterates it into a full representation including kanji, and inserts
 ;;   the output.
@@ -46,7 +46,7 @@
 ;;   a list of candidates transliterated from the input.
 ;;
 ;; This package also ships with an Ivy interface for writing Japanese as well as
-;; a company backend. The company backend is experimental.
+;; a company backend.  The company backend is experimental.
 
 ;;; Code:
 

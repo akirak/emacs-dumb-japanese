@@ -27,7 +27,7 @@
 ;;; Commentary:
 
 ;; This library provides a company backend for katawa, a Japanese transliteration
-;; API. It behaves like an input method, except that it is not implemented as
+;; API.  It behaves like an input method, except that it is not implemented as
 ;; a real input method.
 ;;
 ;; To activate the Japanese transliteration, add `company-katawa-backend' to

@@ -1,4 +1,4 @@
-;;; katawa-ivy-exwm.el --- Like katawa-ivy, but copy into exwm as the default action -*- lexical-binding: t -*-
+;;; katawa-ivy-exwm.el --- katawa-ivy with EXWM support -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2018 by Akira Komamura
 

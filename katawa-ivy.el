@@ -26,7 +26,7 @@
 
 ;;; Commentary:
 
-;; This library provides an Ivy interface to katawa. It allows you to write and
+;; This library provides an Ivy interface to katawa.  It allows you to write and
 ;; edit Japanese text in Emacs with the help of Google CGI API for Japanese
 ;; Input.
 
@@ -74,11 +74,11 @@
   "Re-transliterate or edit text in a region.
 
 If a region from START to END is active, the selected text is re-transliterated
-via an interface similar to that of `katawa-ivy'. The selected region is
+via an interface similar to that of `katawa-ivy'.  The selected region is
 replaced with the new candidate after selection.
 
 If no region is active, a certain portion of text before the cursor is selected
-instead. The selected region is usually a consecutive text of uni-byte
+instead.  The selected region is usually a consecutive text of uni-byte
 characters which does not include spaces and sentence delimiters (\".!?\")."
   (interactive "r")
   (if (region-active-p)

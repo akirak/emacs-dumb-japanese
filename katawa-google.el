@@ -1,10 +1,11 @@
-;;; katawa-google.el --- Convert from hiragana to kanji using the Google CGI Service -*- lexical-binding: t -*-
+;;; katawa-google.el --- Google online API backend for katawa -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2018 by Akira Komamura
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "25") (dash "2.12") (request "0.3.0"))
+;; URL: https://github.com/akirak/katawa.el
 
 ;; This file is not part of GNU Emacs.
 
