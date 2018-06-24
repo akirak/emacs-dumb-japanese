@@ -1,4 +1,4 @@
-;;; katawa-decode.el --- Decode from Japanese romaji to hiragana -*- lexical-binding: t -*-
+;;; katawa-decode.el --- Decode from Japanese romaji to hiragana
 
 ;; Copyright (C) 2018 by Akira Komamura
 

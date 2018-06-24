@@ -54,16 +54,6 @@
                                   (--map (decode-coding-string it 'utf-8) results))))
       (code (error "Returned HTTP %d from %s" code katawa-google-url)))))
 
-(defun katawa-google--postprocess-segment (segment)
-  "Post-process a candidate SEGMENT."
-  (if (and katawa-google-replace-hyphens
-           ;; TODO: Check if the segment is a proper Japanese word (not emoji).
-           ;; (not (string-match-p "^[[:unibyte:]]$" segment))
-           )
-      ;; TODO: Is there a faster implementation for replacement?
-      (replace-regexp-in-string "−" "ー" segment)
-    segment))
-
 (cl-defun katawa-google--combine-candidates (l
                                              &optional
                                              (n-accepted 30)
@@ -83,7 +73,7 @@ N-LIMIT candidates are returned at maximum."
                              append (cl-loop for c in candidates
                                              collect (concat c s)))
                   candidates))))
-    (if (and (> (reduce '* (mapcar 'seq-length l)) n-accepted)
+    (if (and (> (cl-reduce '* (mapcar 'seq-length l)) n-accepted)
              (> (seq-length l) 1))
         (cl-remove-duplicates (append (apply f (--map (-take 2 (cdr it)) l))
                                       (-take n-limit

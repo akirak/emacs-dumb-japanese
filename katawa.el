@@ -71,7 +71,7 @@
                   ((eq katawa-backend 'google) (katawa-google-from-hiragana hiragana))
                   (t (error "No backend is configured")))))
     (if katawa-add-katakana-candidate
-        (add-to-list 'result1 (japanese-katakana hiragana) 't #'string-equal)
+        (append result1 (list (japanese-katakana hiragana)))
       result1)))
 
 ;;;###autoload
