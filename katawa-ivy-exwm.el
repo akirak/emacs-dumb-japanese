@@ -52,6 +52,11 @@
   :type '(vector character)
   :group 'katawa-ivy-exwm)
 
+(defcustom katawa-ivy-exwm-as-katawa-ivy nil
+  "Set the :caller of `katawa-ivy-exwm-' to `katawa-ivy'."
+  :type 'boolean
+  :group 'katawa-ivy-exwm)
+
 (defun katawa-ivy-exwm--get-paste-keys ()
   "Get a paste key sequence for the current EXWM buffer."
   (or (cdr (assoc exwm-class-name katawa-ivy-exwm-class-paste-keys-alist))
@@ -66,7 +71,9 @@
               (lambda (string)
                 (unless (string-empty-p string)
                   (katawa-get-some-candidates string)))
-              :caller 'katawa-ivy-exwm
+              :caller (if katawa-ivy-exwm-as-katawa-ivy
+                          'katawa-ivy
+                        'katawa-ivy-exwm)
               :history 'katawa-ivy-history
               :action (lambda (input)
                         (if (derived-mode-p 'exwm-mode)
