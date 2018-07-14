@@ -52,12 +52,16 @@
 
 (require 'katawa-decode)
 (require 'katawa-google)
+(require 'katawa-skk)
 (require 'japan-util)
 
 ;;;###autoload
 (defcustom katawa-backend 'google
   "The backend to transliterate Japanese."
-  :type '(choice (const :tag "Google CGI API" google))
+  :type '(repeat (choice (const :tag "Google CGI API" google)
+                         (list :tag "SKK dictionary"
+                               (const 'skk)
+                               (string :tag "File name"))))
   :group 'katawa)
 
 (defcustom katawa-add-katakana-candidate t
@@ -67,9 +71,15 @@
 
 (defun katawa--candidates-from-hiragana (hiragana)
   "Transliterate HIRAGANA into a full notation of Japanese."
-  (let ((result1 (cond
-                  ((eq katawa-backend 'google) (katawa-google-from-hiragana hiragana))
-                  (t (error "No backend is configured")))))
+  (let ((result1 (concat #'append
+                         (mapcar (lambda (backend)
+                                   (pcase backend
+                                     ('google (katawa-google-from-hiragana hiragana))
+                                     (`(skk ,dicfile)
+                                      (katawa-skk-with-dictionary dicfile hiragana))))
+                                 (if (listp katawa-backend)
+                                     katawa-backend
+                                   (list katawa-backend))))))
     (if katawa-add-katakana-candidate
         (append result1 (list (japanese-katakana hiragana)))
       result1)))
