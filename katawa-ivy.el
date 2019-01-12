@@ -81,8 +81,10 @@ If no region is active, a certain portion of text before the cursor is selected
 instead.  The selected region is usually a consecutive text of uni-byte
 characters which does not include spaces and sentence delimiters (\".!?\")."
   (interactive "r")
-  (if (region-active-p)
-      (katawa-ivy--fix-region start end)
+  (cond
+   ((region-active-p)
+    (katawa-ivy--fix-region start end))
+   ((thing-at-point 'word)
     (apply #'katawa-ivy--fix-region
            (save-excursion
              (list (progn (re-search-backward "[[:multibyte:][:space:].!?]"
@@ -94,28 +96,34 @@ characters which does not include spaces and sentence delimiters (\".!?\")."
                                              nil 'noerror)
                           (when (looking-at "[[:multibyte:][:space:]]")
                             (goto-char (1- (point))))
-                          (point)))))))
+                          (point))))))
+   (t (katawa-ivy))))
 
-(defun katawa-ivy-fix-at-point ()
+(defun katawa-ivy-fix-at-point (start end)
   "Re-transliterate or edit a segment under the cursor.
 
 This is another version of `katawa-ivy-fix' which analyses a Japanese text
 around the cursor and rewrite the segment at point."
-  (interactive)
-  (let* ((str (thing-at-point 'line))
-         (segments (mapcar #'car (katawa-google--request str)))
-         (col (- (point) (point-at-bol)))
-         (seg-region (cl-loop for seg in segments
-                              with a = 0
-                              for next-col = (+ a (length seg))
-                              if (> next-col col)
-                              return (let ((start (+ (point-at-bol) a)))
-                                       (list start (+ start (length seg))))
-                              else
-                              do (setq a next-col))))
-    (if (< (length seg-region) 2)
-        (error "Invalid arguments: %s" (prin1-to-string seg-region))
-      (apply #'katawa-ivy--fix-region seg-region))))
+  (interactive "r")
+  (cond
+   ((region-active-p)
+    (katawa-ivy--fix-region start end))
+   ((thing-at-point 'word)
+    (let* ((str (thing-at-point 'line))
+           (segments (mapcar #'car (katawa-google--request str)))
+           (col (- (point) (point-at-bol)))
+           (seg-region (cl-loop for seg in segments
+                                with a = 0
+                                for next-col = (+ a (length seg))
+                                if (> next-col col)
+                                return (let ((start (+ (point-at-bol) a)))
+                                         (list start (+ start (length seg))))
+                                else
+                                do (setq a next-col))))
+      (if (< (length seg-region) 2)
+          (error "Invalid arguments: %s" (prin1-to-string seg-region))
+        (apply #'katawa-ivy--fix-region seg-region))))
+   (t (katawa-ivy))))
 
 (provide 'katawa-ivy)
 ;;; katawa-ivy.el ends here
