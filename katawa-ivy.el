@@ -103,7 +103,9 @@ characters which does not include spaces and sentence delimiters (\".!?\")."
   "Re-transliterate or edit a segment under the cursor.
 
 This is another version of `katawa-ivy-fix' which analyses a Japanese text
-around the cursor and rewrite the segment at point."
+around the cursor and rewrite the segment at point.
+
+START is the beginning of a region, and END is the end of the region."
   (interactive "r")
   (cond
    ((region-active-p)
