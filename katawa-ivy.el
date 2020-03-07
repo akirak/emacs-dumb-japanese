@@ -63,7 +63,7 @@
   (interactive "R")
   (let ((str (buffer-substring-no-properties start end)))
     (when (< start end)
-      (ivy-read (format "katawa fix %s: " str)
+      (ivy-read (format "Transliterate \"%s\": " str)
                 (lambda (string)
                   (unless (string-empty-p string)
                     (katawa-get-some-candidates string)))
