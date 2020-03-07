@@ -39,6 +39,9 @@
 
 (defvar katawa-ivy-history nil)
 
+(defconst katawa-ivy-target-regexp (rx (+ (not (or nonascii (any space))))))
+
+;;;###autoload
 (defun katawa-ivy ()
   "Transliterate text into Japanese via an Ivy interface."
   (interactive)
@@ -70,7 +73,8 @@
                 :matcher (lambda (_ cands) cands)
                 :dynamic-collection t))))
 
-(defun katawa-ivy-fix (start end)
+;;;###autoload
+(defun katawa-ivy-fix ()
   "Re-transliterate or edit text in a region.
 
 If a region from START to END is active, the selected text is re-transliterated
@@ -80,52 +84,28 @@ replaced with the new candidate after selection.
 If no region is active, a certain portion of text before the cursor is selected
 instead.  The selected region is usually a consecutive text of uni-byte
 characters which does not include spaces and sentence delimiters (\".!?\")."
-  (interactive "r")
-  (cond
-   ((region-active-p)
-    (katawa-ivy--fix-region start end))
-   ((thing-at-point 'word)
-    (apply #'katawa-ivy--fix-region
-           (save-excursion
-             (list (progn (re-search-backward "[[:multibyte:][:space:].!?]"
-                                              nil 'noerror)
-                          (unless (looking-at "\w")
-                            (goto-char (1+ (point))))
-                          (point))
-                   (progn (re-search-forward "[[:multibyte:][:space:].!?]"
-                                             nil 'noerror)
-                          (when (looking-at "[[:multibyte:][:space:]]")
-                            (goto-char (1- (point))))
-                          (point))))))
-   (t (katawa-ivy))))
+  (interactive)
+  (if (region-active-p)
+      (katawa-ivy--fix-region (region-beginning) (region-end))
+    (let ((initial (point))
+          (bound (1+ (point))))
+      (when (looking-back katawa-ivy-target-regexp)
+        (beginning-of-line)
+        (while (re-search-forward (rx bow) bound t)
+          (forward-char 1))
+        (backward-char))
+      (if (and (eq initial (point))
+               (not (looking-at katawa-ivy-target-regexp)))
+          (katawa-ivy)
+        (let ((beg (point))
+              (end (save-excursion
+                     (re-search-forward katawa-ivy-target-regexp
+                                        (line-end-position)))))
+          (goto-char initial)
+          (katawa-ivy--fix-region beg end))))))
 
-(defun katawa-ivy-fix-at-point (start end)
-  "Re-transliterate or edit a segment under the cursor.
-
-This is another version of `katawa-ivy-fix' which analyses a Japanese text
-around the cursor and rewrite the segment at point.
-
-START is the beginning of a region, and END is the end of the region."
-  (interactive "r")
-  (cond
-   ((region-active-p)
-    (katawa-ivy--fix-region start end))
-   ((thing-at-point 'word)
-    (let* ((str (thing-at-point 'line))
-           (segments (mapcar #'car (katawa-google--request str)))
-           (col (- (point) (point-at-bol)))
-           (seg-region (cl-loop for seg in segments
-                                with a = 0
-                                for next-col = (+ a (length seg))
-                                if (> next-col col)
-                                return (let ((start (+ (point-at-bol) a)))
-                                         (list start (+ start (length seg))))
-                                else
-                                do (setq a next-col))))
-      (if (< (length seg-region) 2)
-          (error "Invalid arguments: %s" (prin1-to-string seg-region))
-        (apply #'katawa-ivy--fix-region seg-region))))
-   (t (katawa-ivy))))
+;;;###autoload
+(define-obsolete-function-alias #'katawa-ivy-fix-at-point #'katawa-ivy-fix "0.2")
 
 (provide 'katawa-ivy)
 ;;; katawa-ivy.el ends here
