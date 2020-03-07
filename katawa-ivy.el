@@ -39,7 +39,10 @@
 
 (defvar katawa-ivy-history nil)
 
-(defconst katawa-ivy-target-regexp (rx (+ (not (or nonascii (any space))))))
+(defconst katawa-ivy-target-regexp (rx (+ bow
+                                (+? (not nonascii))
+                                (or (+ (any punct))
+                                    eow))))
 
 ;;;###autoload
 (defun katawa-ivy ()
@@ -88,12 +91,11 @@ characters which does not include spaces and sentence delimiters (\".!?\")."
   (if (region-active-p)
       (katawa-ivy--fix-region (region-beginning) (region-end))
     (let ((initial (point))
-          (bound (1+ (point))))
-      (when (looking-back katawa-ivy-target-regexp)
+          (bound (point)))
+      (when (looking-back (rx bow (+ (not nonascii))))
         (beginning-of-line)
-        (while (re-search-forward (rx bow) bound t)
-          (forward-char 1))
-        (backward-char))
+        (while (re-search-forward (rx (+ (or blank nonascii)))
+                                  bound t)))
       (if (and (eq initial (point))
                (not (looking-at katawa-ivy-target-regexp)))
           (katawa-ivy)
