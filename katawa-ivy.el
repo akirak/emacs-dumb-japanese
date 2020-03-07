@@ -58,8 +58,9 @@
             :matcher (lambda (_ cands) cands)
             :dynamic-collection t))
 
-(defun katawa-ivy--fix-region (start end)
+(defun katawa-ivy-on-region (start end)
   "Re-transliterate or edit text in a region starting at START and ending at END."
+  (interactive "R")
   (let ((str (buffer-substring-no-properties start end)))
     (when (< start end)
       (ivy-read (format "katawa fix %s: " str)
@@ -77,7 +78,7 @@
                 :dynamic-collection t))))
 
 ;;;###autoload
-(defun katawa-ivy-fix ()
+(defun katawa-ivy-at-point ()
   "Re-transliterate or edit text in a region.
 
 If a region from START to END is active, the selected text is re-transliterated
@@ -89,7 +90,7 @@ instead.  The selected region is usually a consecutive text of uni-byte
 characters which does not include spaces and sentence delimiters (\".!?\")."
   (interactive)
   (if (region-active-p)
-      (katawa-ivy--fix-region (region-beginning) (region-end))
+      (katawa-ivy-on-region (region-beginning) (region-end))
     (let ((initial (point))
           (bound (point)))
       (when (looking-back (rx bow (+ (not nonascii))))
@@ -104,10 +105,7 @@ characters which does not include spaces and sentence delimiters (\".!?\")."
                      (re-search-forward katawa-ivy-target-regexp
                                         (line-end-position)))))
           (goto-char initial)
-          (katawa-ivy--fix-region beg end))))))
-
-;;;###autoload
-(define-obsolete-function-alias #'katawa-ivy-fix-at-point #'katawa-ivy-fix "0.2")
+          (katawa-ivy-on-region beg end))))))
 
 (provide 'katawa-ivy)
 ;;; katawa-ivy.el ends here
