@@ -1,6 +1,6 @@
 ;;; katawa-ivy.el --- Ivy interface to katawa -*- lexical-binding: t -*-
 
-;; Copyright (C) 2018 by Akira Komamura
+;; Copyright (C) 2018,2020 by Akira Komamura
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
 ;; Version: 0.2
