@@ -41,13 +41,13 @@
 (defun katawa-google--request (hiragana)
   "Transliterate HIRAGANA using the service by Google."
   (let ((resp (request katawa-google-url
-                       :params `(("langpair". "ja-Hira|ja")
-                                 ("text" . ,hiragana))
-                       :parser (lambda ()
-                                 (let ((json-array-type 'list))
-                                   (json-read)))
-                       :sync t
-                       :timeout 2)))
+                :params `(("langpair". "ja-Hira|ja")
+                          ("text" . ,hiragana))
+                :parser (lambda ()
+                          (let ((json-array-type 'list))
+                            (json-read)))
+                :sync t
+                :timeout 2)))
     (pcase (request-response-status-code resp)
       (200 (cl-loop for (src results) in (request-response-data resp)
                     collect (cons (decode-coding-string src 'utf-8)
