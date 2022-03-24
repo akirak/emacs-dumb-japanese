@@ -94,63 +94,63 @@ SRC is a string which contains romaji."
              (is-vowel (c) (memq c katawa-decode--alpha-vowels))
              (is-consonant (c) (and (is-alpha c) (not (is-vowel c))))
              (lookup-tree (alist &rest keys)
-                          (progn (while keys
-                                   (setq alist (alist-get (pop keys) alist)))
-                                 alist))
+               (progn (while keys
+                        (setq alist (alist-get (pop keys) alist)))
+                      alist))
              (go (cs)
-                 (pcase cs
-                   ;; End of the input sequence
-                   ('() nil)
-                   (`(?- . ,rest)
-                    (cons "ー" rest))
-                   ;; Non-alphabet characters are passed through
-                   ((and `(,c . ,rest)
-                         (guard (not (is-alpha c))))
-                    (cons (alist-get c katawa-decode-symbol-table
-                                     (char-to-string c))
-                          rest))
-                   ;; Consume "nn" as input
-                   (`(?n ?n . ,rest)
-                    (cons "ん" rest))
-                   ;; Single vowel (a/i/u/e/o)
-                   ((and `(,v . ,rest)
-                         (let j (alist-get v katawa-decode--row-table-a))
-                         (guard j))
-                    (cons j rest))
-                   ;; The same consonants in succession generates 撥音.
-                   ((and `(,c ,c . ,rest)
-                         (guard (is-consonant c)))
-                    (cons "っ" (cons c rest)))
-                   ;; consonant + vowel
-                   ((and `(,c ,v . ,rest)
-                         (let r (lookup-tree katawa-decode--char-table-1
-                                             c v))
-                         (guard r))
-                    (cons r rest))
-                   ;; ends with ya, yu, ye, or yo.
-                   ((and `(,c ?y ,v . ,rest)
-                         (guard (is-vowel v))
-                         (let a (alist-get v '((?a . "ゃ")
-                                               (?u . "ゅ")
-                                               (?e . "ぇ")
-                                               (?o . "ょ"))))
-                         (guard a)
-                         (let r (lookup-tree katawa-decode--char-table-1
-                                             c ?i))
-                         (guard r))
-                    (cons (concat r a) rest))
-                   ;; two consonants + vowel
-                   ((and `(,c1 ,c2 ,v . ,rest)
-                         (let r (lookup-tree katawa-decode--char-table-2
-                                             c1 c2 v))
-                         (guard r))
-                    (cons r rest))
-                   ;; Consume "n" as input
-                   (`(?n . ,rest)
-                    (cons "ん" rest))
-                   ;; did not match: pass through
-                   (`(,c . ,rest) (cons (char-to-string c)
-                                        rest)))))
+               (pcase cs
+                 ;; End of the input sequence
+                 ('() nil)
+                 (`(?- . ,rest)
+                  (cons "ー" rest))
+                 ;; Non-alphabet characters are passed through
+                 ((and `(,c . ,rest)
+                       (guard (not (is-alpha c))))
+                  (cons (alist-get c katawa-decode-symbol-table
+                                   (char-to-string c))
+                        rest))
+                 ;; Consume "nn" as input
+                 (`(?n ?n . ,rest)
+                  (cons "ん" rest))
+                 ;; Single vowel (a/i/u/e/o)
+                 ((and `(,v . ,rest)
+                       (let j (alist-get v katawa-decode--row-table-a))
+                       (guard j))
+                  (cons j rest))
+                 ;; The same consonants in succession generates 撥音.
+                 ((and `(,c ,c . ,rest)
+                       (guard (is-consonant c)))
+                  (cons "っ" (cons c rest)))
+                 ;; consonant + vowel
+                 ((and `(,c ,v . ,rest)
+                       (let r (lookup-tree katawa-decode--char-table-1
+                                           c v))
+                       (guard r))
+                  (cons r rest))
+                 ;; ends with ya, yu, ye, or yo.
+                 ((and `(,c ?y ,v . ,rest)
+                       (guard (is-vowel v))
+                       (let a (alist-get v '((?a . "ゃ")
+                                             (?u . "ゅ")
+                                             (?e . "ぇ")
+                                             (?o . "ょ"))))
+                       (guard a)
+                       (let r (lookup-tree katawa-decode--char-table-1
+                                           c ?i))
+                       (guard r))
+                  (cons (concat r a) rest))
+                 ;; two consonants + vowel
+                 ((and `(,c1 ,c2 ,v . ,rest)
+                       (let r (lookup-tree katawa-decode--char-table-2
+                                           c1 c2 v))
+                       (guard r))
+                  (cons r rest))
+                 ;; Consume "n" as input
+                 ;; (`(?n . ,rest)
+                 ;;  (cons "ん" rest))
+                 ;; did not match: pass through
+                 (`(,c . ,rest) (cons (char-to-string c)
+                                      rest)))))
     (cl-loop for (out . rest) = (go (string-to-list src)) then (go rest)
              while out
              concat out)))
