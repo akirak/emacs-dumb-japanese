@@ -1,11 +1,8 @@
 ;;; katawa-decode.el --- Decode from Japanese romaji to hiragana
 
-;; Copyright (C) 2018 by Akira Komamura
+;; Copyright (C) 2018,2022 by Akira Komamura
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "25") (ivy "0.10") (dash "2.12"))
-;; URL: https://github.com/akirak/katawa.el
 
 ;; This file is not part of GNU Emacs.
 
@@ -31,129 +28,158 @@
 
 ;;; Code:
 
-(require 'dash)
+(require 'map)
 (require 'cl-lib)
 (require 'mule-util)
 
-(defconst katawa-decode--alpha-vowels (string-to-list "aiueo"))
+(defconst katawa-decode--alpha-vowels
+  (string-to-list "aiueo"))
 
-(defun katawa-decode--make-row-table (elements)
-  "Create a zipped alist indexed by vowels, i.e. \"aiueo\".
+(defmacro katawa-decode--zip (keys values &optional nosort)
+  `(let ((keys (copy-sequence ,keys))
+         (values (copy-sequence ,values))
+         items)
+     (while (and keys values)
+       (push (cons (pop keys) (pop values))
+             items))
+     (if ,nosort
+         items
+       (nreverse items))))
+
+(defun katawa-decode--row-alist (elements &optional prepend)
+  "Return a hash table indexed by vowels, i.e. \"aiueo\".
 
 ELEMENTS is a string or a list of strings whose each element is a decoded string
 in the gyou."
-  (-zip katawa-decode--alpha-vowels
-        (cond ((listp elements) elements)
-              ((stringp elements) (mapcar 'char-to-string
-                                          (string-to-list elements))))))
+  (let ((keys (cl-etypecase prepend
+                (null (string-to-list katawa-decode--alpha-vowels))
+                (list (mapcar `(lambda (c)
+                                 (append ',prepend (list c)))
+                              (string-to-list katawa-decode--alpha-vowels))))))
+    (katawa-decode--zip keys elements)))
+
+(defun katawa-decode--singletons (string)
+  (mapcar #'char-to-string (string-to-list string)))
 
 (defconst katawa-decode--row-table-a
-  (katawa-decode--make-row-table "あいうえお"))
+  (katawa-decode--row-alist
+   (katawa-decode--singletons "あいうえお")))
 
 (defconst katawa-decode--char-table-1
-  (-zip (string-to-list "kstnhmrgzdbpxywfvj")
-        (mapcar 'katawa-decode--make-row-table
-                '("かきくけこ"
-                  "さしすせそ"
-                  "たちつてと"
-                  "なにぬねの"
-                  "はひふへほ"
-                  "まみむめも"
-                  "らりるれろ"
-                  "がぎぐげご"
-                  "ざじずぜぞ"
-                  "だぢづでど"
-                  "ばびぶべぼ"
-                  "ぱぴぷぺぽ"
-                  "ぁぃぅぇぉ"
-                  ("や" "い" "ゆ" "いぇ" "よ")
-                  ("わ" "うぃ" "う" "うぇ" "を")
-                  ("ふぁ" "ふぃ" "ふ" "ふぇ" "ふぉ")
-                  ("う゛ぁ" "う゛ぃ" "う゛" "う゛ぇ" "う゛ぉ")
-                  ("じゃ" "じ" "じゅ" "じぇ" "じょ")))))
+  (let* ((values (append (mapcar #'katawa-decode--singletons
+                                 '("かきくけこ"
+                                   "さしすせそ"
+                                   "たちつてと"
+                                   "なにぬねの"
+                                   "はひふへほ"
+                                   "まみむめも"
+                                   "らりるれろ"
+                                   "がぎぐげご"
+                                   "ざじずぜぞ"
+                                   "だぢづでど"
+                                   "ばびぶべぼ"
+                                   "ぱぴぷぺぽ"
+                                   "ぁぃぅぇぉ"))
+                         '(("や" "い" "ゆ" "いぇ" "よ")
+                           ("わ" "うぃ" "う" "うぇ" "を")
+                           ("ふぁ" "ふぃ" "ふ" "ふぇ" "ふぉ")
+                           ("う゛ぁ" "う゛ぃ" "う゛" "う゛ぇ" "う゛ぉ")
+                           ("じゃ" "じ" "じゅ" "じぇ" "じょ"))))
+         (pairs (katawa-decode--zip (string-to-list "kstnhmrgzdbpxywfvj")
+                                    values))
+         (tbl (make-hash-table :size (* 5 (length pairs))
+                               :test #'equal)))
+    (pcase-dolist (`(,consonant . ,entries) pairs)
+      (pcase-dolist (`(,key . ,value)
+                     (katawa-decode--row-alist entries (list consonant)))
+        (puthash key value tbl)))
+    tbl))
 
 (defconst katawa-decode--char-table-2
-  `((?s . ((?h . ,(katawa-decode--make-row-table '("しゃ" "し" "しゅ" "しぇ" "しょ")))))
-    (?c . ((?h . ,(katawa-decode--make-row-table '("ちゃ" "ち" "ちゅ" "ちぇ" "ちょ")))))
-    (?t . ((?s . ,(katawa-decode--make-row-table '("つぁ" "ち" "つ" "つぇ" "つぉ")))))))
+  (let* ((pairs `(((?s ?h) . ("しゃ" "し" "しゅ" "しぇ" "しょ"))
+                  ((?c ?h) . ("ちゃ" "ち" "ちゅ" "ちぇ" "ちょ"))
+                  ((?t ?s) . ("つぁ" "ち" "つ" "つぇ" "つぉ"))))
+         (tbl (make-hash-table :size (* 5 (length pairs))
+                               :test #'equal)))
+    (pcase-dolist (`(,consonant . ,entries) pairs)
+      (pcase-dolist (`(,key . ,value)
+                     (katawa-decode--row-alist entries (list consonant)))
+        (puthash key value tbl)))
+    tbl))
 
 ;;;###autoload
-(defcustom katawa-decode-symbol-table
+(defcustom katawa-decode-punct-table
   '((?\. . "。")
     (?\, . "、"))
-  "List of symbols to translate."
+  "List of punctuations to transliterate."
   :type '(repeat (cons integer string))
   :group 'katawa)
 
 ;;;###autoload
-(defun katawa-decode-romaji (src)
-  "Transliterate romaji, i.e. Roman representation of Japanese, into hiragana.
-
-SRC is a string which contains romaji."
-  (cl-flet* ((is-alpha (c) (and (>= c ?a) (<= c ?z)))
-             (is-vowel (c) (memq c katawa-decode--alpha-vowels))
-             (is-consonant (c) (and (is-alpha c) (not (is-vowel c))))
-             (lookup-tree (alist &rest keys)
-               (progn (while keys
-                        (setq alist (alist-get (pop keys) alist)))
-                      alist))
-             (go (cs)
-               (pcase cs
-                 ;; End of the input sequence
-                 ('() nil)
-                 (`(?- . ,rest)
-                  (cons "ー" rest))
-                 ;; Non-alphabet characters are passed through
-                 ((and `(,c . ,rest)
-                       (guard (not (is-alpha c))))
-                  (cons (alist-get c katawa-decode-symbol-table
-                                   (char-to-string c))
-                        rest))
-                 ;; Consume "nn" as input
-                 (`(?n ?n . ,rest)
-                  (cons "ん" rest))
-                 ;; Single vowel (a/i/u/e/o)
-                 ((and `(,v . ,rest)
-                       (let j (alist-get v katawa-decode--row-table-a))
-                       (guard j))
-                  (cons j rest))
-                 ;; The same consonants in succession generates 撥音.
-                 ((and `(,c ,c . ,rest)
-                       (guard (is-consonant c)))
-                  (cons "っ" (cons c rest)))
-                 ;; consonant + vowel
-                 ((and `(,c ,v . ,rest)
-                       (let r (lookup-tree katawa-decode--char-table-1
-                                           c v))
-                       (guard r))
-                  (cons r rest))
-                 ;; ends with ya, yu, ye, or yo.
-                 ((and `(,c ?y ,v . ,rest)
-                       (guard (is-vowel v))
-                       (let a (alist-get v '((?a . "ゃ")
-                                             (?u . "ゅ")
-                                             (?e . "ぇ")
-                                             (?o . "ょ"))))
-                       (guard a)
-                       (let r (lookup-tree katawa-decode--char-table-1
-                                           c ?i))
-                       (guard r))
-                  (cons (concat r a) rest))
-                 ;; two consonants + vowel
-                 ((and `(,c1 ,c2 ,v . ,rest)
-                       (let r (lookup-tree katawa-decode--char-table-2
-                                           c1 c2 v))
-                       (guard r))
-                  (cons r rest))
-                 ;; Consume "n" as input
-                 ;; (`(?n . ,rest)
-                 ;;  (cons "ん" rest))
-                 ;; did not match: pass through
-                 (`(,c . ,rest) (cons (char-to-string c)
-                                      rest)))))
-    (cl-loop for (out . rest) = (go (string-to-list src)) then (go rest)
-             while out
-             concat out)))
+(defun katawa-decode-romaji (input)
+  "Return a hiragana transliteration of romaji."
+  (let ((chars (string-to-list input)))
+    (cl-flet*
+        ((is-alpha (c) (and (>= c ?a) (<= c ?z)))
+         (is-vowel (c) (memq c katawa-decode--alpha-vowels))
+         (is-consonant (c) (and (is-alpha c) (not (is-vowel c)))))
+      (with-temp-buffer
+        (while chars
+          (pcase chars
+            ;; End of the input sequence
+            ('() nil)
+            (`(?- . ,rest)
+             (insert "ー")
+             (setq chars rest))
+            ;; Non-alphabet characters are passed through
+            ((and `(,c . ,rest)
+                  (guard (not (is-alpha c))))
+             (insert (alist-get c katawa-decode-punct-table
+                                (char-to-string c)))
+             (setq chars rest))
+            ;; Consume "nn" as input
+            (`(?n ?n . ,rest)
+             (insert "ん")
+             (setq chars rest))
+            ;; Single vowel (a/i/u/e/o)
+            ((and `(,v . ,rest)
+                  (let j (map-elt katawa-decode--row-table-a v))
+                  (guard j))
+             (insert j)
+             (setq chars rest))
+            ;; The same consonants in succession generates 撥音.
+            ((and `(,c ,c . ,rest)
+                  (guard (is-consonant c)))
+             (insert "っ")
+             (setq chars (cons c rest)))
+            ;; consonant + vowel
+            ((and `(,c ,v . ,rest)
+                  (let r (map-elt katawa-decode--char-table-1 (list c v)))
+                  (guard r))
+             (insert r)
+             (setq chars rest))
+            ;; ends with ya, yu, ye, or yo.
+            ((and `(,c ?y ,v . ,rest)
+                  (guard (is-vowel v))
+                  (let a (alist-get v '((?a . "ゃ")
+                                        (?u . "ゅ")
+                                        (?e . "ぇ")
+                                        (?o . "ょ"))))
+                  (guard a)
+                  (let r (map-elt katawa-decode--char-table-1 (list c ?i)))
+                  (guard r))
+             (insert (concat r a))
+             (setq chars rest))
+            ;; two consonants + vowel
+            ((and `(,c1 ,c2 ,v . ,rest)
+                  (let r (map-elt katawa-decode--char-table-2 (list c1 c2 v)))
+                  (guard r))
+             (insert r)
+             (setq chars rest))
+            (`(,c . ,rest)
+             (insert (char-to-string c))
+             (setq chars rest))))
+        (buffer-string)))))
 
 (provide 'katawa-decode)
 ;;; katawa-decode.el ends here
