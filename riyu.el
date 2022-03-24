@@ -1,5 +1,8 @@
 ;;; riyu.el --- A dictionary-less Japanese input method -*- lexical-binding: t -*-
 
+(require 'riyu-google)
+(require 'riyu-decode)
+
 (defvar riyu-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m [remap self-insert-command] #'riyu-self-insert-command)
@@ -34,7 +37,7 @@
              (end (match-end 0)))
          (when (eq (get-char-property beg 'riyu-counter) riyu-counter)
            (let* ((orig (buffer-substring-no-properties beg end))
-                  (new (katawa-decode-romaji orig)))
+                  (new (riyu-decode-romaji orig)))
              (unless (equal new orig)
                (delete-region beg end)
                (insert new)
@@ -70,7 +73,7 @@
       (let* ((begin (prop-match-beginning prop-match))
              (end (prop-match-end prop-match))
              (input (buffer-substring-no-properties begin end))
-             (candidates (katawa-google-from-hiragana
+             (candidates (riyu-google-from-hiragana
                           input)))
         (when candidates
           (let ((replace (completing-read (format "\"%s\": " input) candidates))
@@ -89,8 +92,8 @@
 (defun riyu-dispatch-on-region (begin end)
   (interactive "r")
   (let* ((input (buffer-substring-no-properties begin end))
-         (candidates (katawa-google-from-hiragana
-                      (katawa-decode-romaji input))))
+         (candidates (riyu-google-from-hiragana
+                      (riyu-decode-romaji input))))
     (when candidates
       (let ((replace (completing-read (format "\"%s\": " input) candidates)))
         (delete-region begin end)

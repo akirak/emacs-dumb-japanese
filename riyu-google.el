@@ -1,11 +1,8 @@
-;;; katawa-google.el --- Google online API backend for katawa -*- lexical-binding: t -*-
+;;; riyu-google.el --- Google online API backend for katawa -*- lexical-binding: t -*-
 
-;; Copyright (C) 2018 by Akira Komamura
+;; Copyright (C) 2018,2022 by Akira Komamura
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "25") (dash "2.12") (request "0.3.0"))
-;; URL: https://github.com/akirak/katawa.el
 
 ;; This file is not part of GNU Emacs.
 
@@ -34,13 +31,13 @@
 (require 'dash)
 (require 'json)
 (require 'request)
-(require 'katawa-decode)
+(require 'riyu-decode)
 
-(defvar katawa-google-url "http://www.google.com/transliterate")
+(defvar riyu-google-url "http://www.google.com/transliterate")
 
-(defun katawa-google--request (hiragana)
+(defun riyu-google--request (hiragana)
   "Transliterate HIRAGANA using the service by Google."
-  (let ((resp (request katawa-google-url
+  (let ((resp (request riyu-google-url
                 :params `(("langpair". "ja-Hira|ja")
                           ("text" . ,hiragana))
                 :parser (lambda ()
@@ -52,13 +49,13 @@
       (200 (cl-loop for (src results) in (request-response-data resp)
                     collect (cons (decode-coding-string src 'utf-8)
                                   (--map (decode-coding-string it 'utf-8) results))))
-      (code (error "Returned HTTP %d from %s" code katawa-google-url)))))
+      (code (error "Returned HTTP %d from %s" code riyu-google-url)))))
 
-(cl-defun katawa-google--combine-candidates (l
-                                             &optional
-                                             (n-accepted 30)
-                                             (n-limit 40)
-                                             (n-each 4))
+(cl-defun riyu-google--combine-candidates (l
+                                           &optional
+                                           (n-accepted 30)
+                                           (n-limit 40)
+                                           (n-each 4))
   "Combine segmented candidates into a list of concatenated candidates.
 
 L is a list of list of candidates.
@@ -83,15 +80,15 @@ N-LIMIT candidates are returned at maximum."
       (apply f (--map (append (cdr it) (list (car it))) l)))))
 
 ;;;###autoload
-(defun katawa-google-from-hiragana (hiragana)
+(defun riyu-google-from-hiragana (hiragana)
   "Transliterate HIRAGANA and return a list of candidates."
-  (katawa-google--combine-candidates
-   (katawa-google--request hiragana)))
+  (riyu-google--combine-candidates
+   (riyu-google--request hiragana)))
 
 ;;;###autoload
-(defun katawa-google-from-romaji (romaji)
+(defun riyu-google-from-romaji (romaji)
   "Transliterate ROMAJI and return a list of candidates."
-  (katawa-google-from-hiragana (katawa-decode-romaji romaji)))
+  (riyu-google-from-hiragana (katawa-decode-romaji romaji)))
 
-(provide 'katawa-google)
-;;; katawa-google.el ends here
+(provide 'riyu-google)
+;;; riyu-google.el ends here
