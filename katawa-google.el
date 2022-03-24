@@ -75,7 +75,7 @@ N-LIMIT candidates are returned at maximum."
                   candidates))))
     (if (and (> (cl-reduce '* (mapcar 'seq-length l)) n-accepted)
              (> (seq-length l) 1))
-        (cl-remove-duplicates (append (apply f (--map (-take 2 (cdr it)) l))
+        (cl-remove-duplicates (append (apply f (--map (-take 10 (cdr it)) l))
                                       (-take n-limit
                                              (apply f (--map (-take n-each it) l))))
                               :test #'string-equal
