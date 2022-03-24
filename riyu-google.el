@@ -33,7 +33,7 @@
 (require 'request)
 (require 'riyu-decode)
 
-(defvar riyu-google-url "http://www.google.com/transliterate")
+(defvar riyu-google-url "https://www.google.com/transliterate")
 
 (defun riyu-google--request (hiragana)
   "Transliterate HIRAGANA using the service by Google."
