@@ -27,68 +27,31 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-(require 'dash)
-(require 'json)
-(require 'request)
-(require 'riyu-decode)
+(require 'url-http)
 
-(defvar riyu-google-url "https://www.google.com/transliterate")
+(defcustom riyu-google-url "https://www.google.com/transliterate"
+  "Endpoint url."
+  :type 'string)
 
-(defun riyu-google--request (hiragana)
-  "Transliterate HIRAGANA using the service by Google."
-  (let ((resp (request riyu-google-url
-                :params `(("langpair". "ja-Hira|ja")
-                          ("text" . ,hiragana))
-                :parser (lambda ()
-                          (let ((json-array-type 'list))
-                            (json-read)))
-                :sync t
-                :timeout 2)))
-    (pcase (request-response-status-code resp)
-      (200 (cl-loop for (src results) in (request-response-data resp)
-                    collect (cons (decode-coding-string src 'utf-8)
-                                  (--map (decode-coding-string it 'utf-8) results))))
-      (code (error "Returned HTTP %d from %s" code riyu-google-url)))))
+(defcustom riyu-google-timeout 2
+  ""
+  :type 'number)
 
-(cl-defun riyu-google--combine-candidates (l
-                                           &optional
-                                           (n-accepted 30)
-                                           (n-limit 40)
-                                           (n-each 4))
-  "Combine segmented candidates into a list of concatenated candidates.
+(cl-defun riyu-google--request (input &key (langpair "ja-Hira|ja"))
+  "Return transliteration of an input string."
+  (let ((buf (url-retrieve-synchronously (format "%s?langpair=%s&text=%s"
+                                                 riyu-google-url langpair input)
+                                         'silent nil riyu-google-timeout)))
+    (unwind-protect
+        (with-current-buffer buf
+          (when (bound-and-true-p url-http-end-of-headers)
+            (delete-region (point-min) url-http-end-of-headers))
+          (goto-char (point-min))
+          (json-parse-buffer :array-type 'list :object-type 'alist))
+      (kill-buffer buf))))
 
-L is a list of list of candidates.
-
-If the total number of combinations is not greater than N-ACCEPTED, no items
-are not reduced. Otherwise, the first N-EACH items are taken from each segment.
-
-N-LIMIT candidates are returned at maximum."
-  (letrec ((f (lambda (candidates &rest rest)
-                (if rest
-                    (cl-loop for s in (apply f rest)
-                             append (cl-loop for c in candidates
-                                             collect (concat c s)))
-                  candidates))))
-    (if (and (> (cl-reduce '* (mapcar 'seq-length l)) n-accepted)
-             (> (seq-length l) 1))
-        (cl-remove-duplicates (append (apply f (--map (-take 10 (cdr it)) l))
-                                      (-take n-limit
-                                             (apply f (--map (-take n-each it) l))))
-                              :test #'string-equal
-                              :from-end t)
-      (apply f (--map (append (cdr it) (list (car it))) l)))))
-
-;;;###autoload
-(defun riyu-google-from-hiragana (hiragana)
-  "Transliterate HIRAGANA and return a list of candidates."
-  (riyu-google--combine-candidates
-   (riyu-google--request hiragana)))
-
-;;;###autoload
-(defun riyu-google-from-romaji (romaji)
-  "Transliterate ROMAJI and return a list of candidates."
-  (riyu-google-from-hiragana (katawa-decode-romaji romaji)))
+(defun riyu-google-from-hiragana (input)
+  (riyu-google--request input))
 
 (provide 'riyu-google)
 ;;; riyu-google.el ends here
