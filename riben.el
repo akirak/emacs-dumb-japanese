@@ -52,10 +52,24 @@
     m))
 
 (defcustom riben-dispatch-trigger-alist
-  '((?\, . ",")
+  '((?\, . "、")
     (?. . "。")
+    (?? . "？")
+    (?! . "！")
     (?\s))
-  "Alist of keys that dispatch transliteration.")
+  "Alist of keys that dispatch transliteration.
+
+This is a cons cell of (CHARACTER . STRING) where CHARACTER is a
+key entered in `riben-self-insert-command' and STRING is a text
+that replaces the character.
+
+This is usually a pair of terminating punctuations. As a special
+case, the string can be nil, which only triggers transliterations
+and vanishes the space."
+  :type '(alist :key-type (character :tag "Character that triggers an event")
+                :value-type (choice :tag "Replacement"
+                                    string
+                                    (const nil))))
 
 (defcustom riben-continue-commands
   '(delete-backward-char)
