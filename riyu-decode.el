@@ -103,7 +103,7 @@ in the gyou."
                                :test #'equal)))
     (pcase-dolist (`(,consonant . ,entries) pairs)
       (pcase-dolist (`(,key . ,value)
-                     (riyu-decode--row-alist entries (list consonant)))
+                     (riyu-decode--row-alist entries consonant))
         (puthash key value tbl)))
     tbl))
 
