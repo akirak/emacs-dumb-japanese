@@ -44,6 +44,13 @@
   :prefix "riben-"
   :group 'i18n)
 
+(defconst riben-decode-regexp
+  (rx-to-string `(+ (any "0-9a-z"
+                         ,(thread-last
+                            riben-decode-punctuation-alist
+                            (mapcar (lambda (cell) (char-to-string (car cell))))
+                            (apply #'concat))))))
+
 (defvar riben-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m [remap self-insert-command] #'riben-self-insert-command)
@@ -108,7 +115,7 @@ and vanishes the space."
                      riben--counter)
   (pcase (assq (char-after (1- (point))) riben-dispatch-trigger-alist)
     (`nil
-     (when (thing-at-point-looking-at (rx (+ (any "a-z"))) 3)
+     (when (thing-at-point-looking-at riben-decode-regexp 3)
        (let ((beg (match-beginning 0))
              (end (match-end 0)))
          (when (eq (get-char-property beg 'riben--counter) riben--counter)
