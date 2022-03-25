@@ -2,11 +2,13 @@
 
 (require 'riyu-google)
 (require 'riyu-decode)
+(require 'mule-cmds)
 
 (defvar riyu-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m [remap self-insert-command] #'riyu-self-insert-command)
     (define-key m [remap newline] #'riyu-newline)
+    (define-key m "q" #'riyu-mode-disable)
     m))
 
 (defcustom riyu-trigger-alist
@@ -25,9 +27,21 @@
 (defvar riyu--segment nil)
 (defvar riyu--match-data nil)
 
+;;;###autoload
 (define-minor-mode riyu-mode
   ""
-  :lighter "Riyu ")
+  :lighter "Riyu "
+  (when riyu-mode
+    (setq deactivate-current-input-method-function
+          #'riyu-mode-disable)))
+
+;;;###autoload
+(register-input-method "japanese-riyu" "Japanese" #'riyu-mode
+                       "日笨" "Riyu ")
+
+(defun riyu-mode-disable ()
+  (interactive)
+  (riyu-mode -1))
 
 (defun riyu-newline ()
   (interactive)
