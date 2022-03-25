@@ -1,4 +1,4 @@
-;;; riben-google.el --- Google online API backend for katawa -*- lexical-binding: t -*-
+;;; riben-google.el --- Google online API backend -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2018,2022 by Akira Komamura
 
