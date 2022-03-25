@@ -4,9 +4,10 @@
 
 (defconst riben-posframe-buffer "*riben posframe*")
 
-(defcustom riben-posframe-keys
+(defcustom riben-posframe-access-keys
   (string-to-list "asdfghjkl")
-  ""
+  "List of shortcut keys used to select a candidate by index."
+  :group 'riben
   :type '(repeat character))
 
 (defvar riben-posframe--candidates nil)
@@ -25,7 +26,7 @@
     (define-key map (kbd "C-g") #'riben-posframe-cancel)
     (define-key map (kbd "C-f") #'riben-posframe-confirm)
     (define-key map (kbd "RET") #'riben-posframe-confirm)
-    (dolist (i (number-sequence 0 (1- (length riben-posframe-keys))))
+    (dolist (i (number-sequence 0 (1- (length riben-posframe-access-keys))))
       (let ((cmd (intern (concat "riben-posframe-confirm-" (int-to-string i)))))
         (fset cmd `(lambda ()
                      (interactive)
@@ -33,7 +34,7 @@
                        (when (< n (length riben-posframe--candidates))
                          (setq riben-posframe--selection n)
                          (riben-posframe-confirm)))))
-        (define-key map (vector (elt riben-posframe-keys i)) cmd)
+        (define-key map (vector (elt riben-posframe-access-keys i)) cmd)
         (push cmd riben-posframe-exit-commands)))
     map))
 
@@ -79,8 +80,8 @@
       (put-text-property (point-min) (point-min)
                          'face 'riben-posframe-header-face)
       (dolist (cand riben-posframe--candidates)
-        (if (< i (length riben-posframe-keys))
-            (insert (char-to-string (elt riben-posframe-keys i))
+        (if (< i (length riben-posframe-access-keys))
+            (insert (char-to-string (elt riben-posframe-access-keys i))
                     ": ")
           (insert "   "))
         (put-text-property (line-beginning-position) (point)

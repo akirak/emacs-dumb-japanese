@@ -31,10 +31,12 @@
 
 (defcustom riben-google-url "https://www.google.com/transliterate"
   "Endpoint url."
+  :group 'riben
   :type 'string)
 
 (defcustom riben-google-timeout 2
   ""
+  :group 'riben
   :type 'number)
 
 (cl-defun riben-google--request (input &key (langpair "ja-Hira|ja"))

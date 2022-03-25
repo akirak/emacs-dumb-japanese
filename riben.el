@@ -1,7 +1,12 @@
-;;; riben.el --- A dictionary-less Japanese input method -*- lexical-binding: t -*-
+;;; riben.el --- A dumb Japanese input method -*- lexical-binding: t -*-
 
 (require 'riben-google)
 (require 'riben-decode)
+
+(defgroup riben nil
+  "A dumb Japanese input method."
+  :prefix "riben-"
+  :group 'i18n)
 
 (defvar riben-mode-map
   (let ((m (make-sparse-keymap)))
@@ -10,15 +15,15 @@
     (define-key m "q" #'riben-mode-disable)
     m))
 
-(defcustom riben-trigger-alist
+(defcustom riben-dispatch-trigger-alist
   '((?\, . ",")
     (?. . "。")
     (?\s))
-  "")
+  "Alist of keys that dispatch transliteration.")
 
 (defcustom riben-continue-commands
   '(delete-backward-char)
-  ""
+  "List of commands that does not terminate input."
   :type '(repeat symbol))
 
 (defvar riben--counter 0)
@@ -28,7 +33,7 @@
 
 ;;;###autoload
 (define-minor-mode riben-mode
-  ""
+  "A dumb Japanese input method."
   :lighter "Riben "
   (when riben-mode
     (setq deactivate-current-input-method-function
@@ -58,7 +63,7 @@
                      (point)
                      'riben--counter
                      riben--counter)
-  (pcase (assq (char-after (1- (point))) riben-trigger-alist)
+  (pcase (assq (char-after (1- (point))) riben-dispatch-trigger-alist)
     (`nil
      (when (thing-at-point-looking-at (rx (+ (any "a-z"))) 3)
        (let ((beg (match-beginning 0))

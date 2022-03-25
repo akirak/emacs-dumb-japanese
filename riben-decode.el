@@ -107,15 +107,13 @@ in the gyou."
         (puthash key value tbl)))
     tbl))
 
-;;;###autoload
 (defcustom riben-decode-punct-table
   '((?\. . "。")
     (?\, . "、"))
   "List of punctuations to transliterate."
   :type '(repeat (cons integer string))
-  :group 'katawa)
+  :group 'riben)
 
-;;;###autoload
 (defun riben-decode-romaji (input)
   "Return a hiragana transliteration of romaji."
   (let ((chars (string-to-list input)))
