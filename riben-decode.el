@@ -138,14 +138,10 @@ You can refer to a list of Japanese punctuations available at
           (pcase chars
             ;; End of the input sequence
             ('() nil)
-            (`(?- . ,rest)
-             (insert "ー")
-             (setq chars rest))
-            ;; Non-alphabet characters are passed through
             ((and `(,c . ,rest)
-                  (guard (not (is-alpha c))))
-             (insert (alist-get c riben-decode-punct-table
-                                (char-to-string c)))
+                  (let p (map-elt riben-decode-punctuation-alist c))
+                  (guard p))
+             (insert p)
              (setq chars rest))
             ;; Consume "nn" as input
             (`(?n ?n . ,rest)
