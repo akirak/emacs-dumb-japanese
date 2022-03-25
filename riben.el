@@ -37,6 +37,7 @@
 
 (require 'riben-google)
 (require 'riben-decode)
+(require 'riben-posframe)
 
 (defgroup riben nil
   "A dumb Japanese input method."
