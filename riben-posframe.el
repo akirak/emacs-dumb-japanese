@@ -14,9 +14,6 @@
 (defvar riben-posframe--selection nil)
 (defvar riben-posframe--callback nil)
 
-(defvar riben-posframe-exit-commands '(riben-posframe-confirm
-                                      riben-posframe-cancel))
-
 (defvar riben-posframe-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "<down>") #'riben-posframe-next)
@@ -34,8 +31,7 @@
                        (when (< n (length riben-posframe--candidates))
                          (setq riben-posframe--selection n)
                          (riben-posframe-confirm)))))
-        (define-key map (vector (elt riben-posframe-access-keys i)) cmd)
-        (push cmd riben-posframe-exit-commands)))
+        (define-key map (vector (elt riben-posframe-access-keys i)) cmd)))
     map))
 
 (defface riben-posframe-inactive-face
@@ -72,7 +68,8 @@
                        #'riben-posframe-confirm)))
 
 (defun riben-posframe--keep-p ()
-  (not (memq this-command riben-posframe-exit-commands)))
+  (memq this-command '(riben-posframe-next
+                       riben-posframe-previous)))
 
 (defun riben-posframe--format-candidates ()
   (let ((i 0))
