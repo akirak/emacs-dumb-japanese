@@ -107,10 +107,22 @@ in the gyou."
         (puthash key value tbl)))
     tbl))
 
-(defcustom riben-decode-punct-table
-  '((?\. . "。")
-    (?\, . "、"))
-  "List of punctuations to transliterate."
+(defcustom riben-decode-punctuation-alist
+  '((?- . "ー")
+    (?\~ . "〜")
+    (?/ . "・")
+    (?\( . "（")
+    (?\) . "）")
+    (?\< . "【")
+    (?\> . "】")
+    (?\[ . "「")
+    (?\] . "」")
+    (?\{ . "『")
+    (?\} . "』"))
+  "List of punctuations to transliterate.
+
+You can refer to a list of Japanese punctuations available at
+<https://teamjapanese.com/japanese-punctuation/>."
   :type '(repeat (cons integer string))
   :group 'riben)
 
