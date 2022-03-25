@@ -1,4 +1,4 @@
-;;; riyu-google.el --- Google online API backend for katawa -*- lexical-binding: t -*-
+;;; riben-google.el --- Google online API backend for katawa -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2018,2022 by Akira Komamura
 
@@ -29,19 +29,19 @@
 
 (require 'url-http)
 
-(defcustom riyu-google-url "https://www.google.com/transliterate"
+(defcustom riben-google-url "https://www.google.com/transliterate"
   "Endpoint url."
   :type 'string)
 
-(defcustom riyu-google-timeout 2
+(defcustom riben-google-timeout 2
   ""
   :type 'number)
 
-(cl-defun riyu-google--request (input &key (langpair "ja-Hira|ja"))
+(cl-defun riben-google--request (input &key (langpair "ja-Hira|ja"))
   "Return transliteration of an input string."
   (let ((buf (url-retrieve-synchronously (format "%s?langpair=%s&text=%s"
-                                                 riyu-google-url langpair input)
-                                         'silent nil riyu-google-timeout)))
+                                                 riben-google-url langpair input)
+                                         'silent nil riben-google-timeout)))
     (unwind-protect
         (with-current-buffer buf
           (when (bound-and-true-p url-http-end-of-headers)
@@ -50,8 +50,8 @@
           (json-parse-buffer :array-type 'list :object-type 'alist))
       (kill-buffer buf))))
 
-(defun riyu-google-from-hiragana (input)
-  (riyu-google--request input))
+(defun riben-google-from-hiragana (input)
+  (riben-google--request input))
 
-(provide 'riyu-google)
-;;; riyu-google.el ends here
+(provide 'riben-google)
+;;; riben-google.el ends here

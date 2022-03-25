@@ -1,4 +1,4 @@
-;;; riyu-decode.el --- Decode from Japanese romaji to hiragana
+;;; riben-decode.el --- Decode from Japanese romaji to hiragana
 
 ;; Copyright (C) 2018,2022 by Akira Komamura
 
@@ -32,10 +32,10 @@
 (require 'cl-lib)
 (require 'mule-util)
 
-(defconst riyu-decode--alpha-vowels
+(defconst riben-decode--alpha-vowels
   (string-to-list "aiueo"))
 
-(defmacro riyu-decode--zip (keys values &optional nosort)
+(defmacro riben-decode--zip (keys values &optional nosort)
   `(let ((keys (copy-sequence ,keys))
          (values (copy-sequence ,values))
          items)
@@ -46,27 +46,27 @@
          items
        (nreverse items))))
 
-(defun riyu-decode--row-alist (elements &optional prepend)
+(defun riben-decode--row-alist (elements &optional prepend)
   "Return a hash table indexed by vowels, i.e. \"aiueo\".
 
 ELEMENTS is a string or a list of strings whose each element is a decoded string
 in the gyou."
   (let ((keys (cl-etypecase prepend
-                (null (string-to-list riyu-decode--alpha-vowels))
+                (null (string-to-list riben-decode--alpha-vowels))
                 (list (mapcar `(lambda (c)
                                  (append ',prepend (list c)))
-                              (string-to-list riyu-decode--alpha-vowels))))))
-    (riyu-decode--zip keys elements)))
+                              (string-to-list riben-decode--alpha-vowels))))))
+    (riben-decode--zip keys elements)))
 
-(defun riyu-decode--singletons (string)
+(defun riben-decode--singletons (string)
   (mapcar #'char-to-string (string-to-list string)))
 
-(defconst riyu-decode--row-table-a
-  (riyu-decode--row-alist
-   (riyu-decode--singletons "あいうえお")))
+(defconst riben-decode--row-table-a
+  (riben-decode--row-alist
+   (riben-decode--singletons "あいうえお")))
 
-(defconst riyu-decode--char-table-1
-  (let* ((values (append (mapcar #'riyu-decode--singletons
+(defconst riben-decode--char-table-1
+  (let* ((values (append (mapcar #'riben-decode--singletons
                                  '("かきくけこ"
                                    "さしすせそ"
                                    "たちつてと"
@@ -85,17 +85,17 @@ in the gyou."
                            ("ふぁ" "ふぃ" "ふ" "ふぇ" "ふぉ")
                            ("う゛ぁ" "う゛ぃ" "う゛" "う゛ぇ" "う゛ぉ")
                            ("じゃ" "じ" "じゅ" "じぇ" "じょ"))))
-         (pairs (riyu-decode--zip (string-to-list "kstnhmrgzdbpxywfvj")
+         (pairs (riben-decode--zip (string-to-list "kstnhmrgzdbpxywfvj")
                                     values))
          (tbl (make-hash-table :size (* 5 (length pairs))
                                :test #'equal)))
     (pcase-dolist (`(,consonant . ,entries) pairs)
       (pcase-dolist (`(,key . ,value)
-                     (riyu-decode--row-alist entries (list consonant)))
+                     (riben-decode--row-alist entries (list consonant)))
         (puthash key value tbl)))
     tbl))
 
-(defconst riyu-decode--char-table-2
+(defconst riben-decode--char-table-2
   (let* ((pairs `(((?s ?h) . ("しゃ" "し" "しゅ" "しぇ" "しょ"))
                   ((?c ?h) . ("ちゃ" "ち" "ちゅ" "ちぇ" "ちょ"))
                   ((?t ?s) . ("つぁ" "ち" "つ" "つぇ" "つぉ"))))
@@ -103,12 +103,12 @@ in the gyou."
                                :test #'equal)))
     (pcase-dolist (`(,consonant . ,entries) pairs)
       (pcase-dolist (`(,key . ,value)
-                     (riyu-decode--row-alist entries consonant))
+                     (riben-decode--row-alist entries consonant))
         (puthash key value tbl)))
     tbl))
 
 ;;;###autoload
-(defcustom riyu-decode-punct-table
+(defcustom riben-decode-punct-table
   '((?\. . "。")
     (?\, . "、"))
   "List of punctuations to transliterate."
@@ -116,12 +116,12 @@ in the gyou."
   :group 'katawa)
 
 ;;;###autoload
-(defun riyu-decode-romaji (input)
+(defun riben-decode-romaji (input)
   "Return a hiragana transliteration of romaji."
   (let ((chars (string-to-list input)))
     (cl-flet*
         ((is-alpha (c) (and (>= c ?a) (<= c ?z)))
-         (is-vowel (c) (memq c riyu-decode--alpha-vowels))
+         (is-vowel (c) (memq c riben-decode--alpha-vowels))
          (is-consonant (c) (and (is-alpha c) (not (is-vowel c)))))
       (with-temp-buffer
         (while chars
@@ -134,7 +134,7 @@ in the gyou."
             ;; Non-alphabet characters are passed through
             ((and `(,c . ,rest)
                   (guard (not (is-alpha c))))
-             (insert (alist-get c riyu-decode-punct-table
+             (insert (alist-get c riben-decode-punct-table
                                 (char-to-string c)))
              (setq chars rest))
             ;; Consume "nn" as input
@@ -143,7 +143,7 @@ in the gyou."
              (setq chars rest))
             ;; Single vowel (a/i/u/e/o)
             ((and `(,v . ,rest)
-                  (let j (map-elt riyu-decode--row-table-a v))
+                  (let j (map-elt riben-decode--row-table-a v))
                   (guard j))
              (insert j)
              (setq chars rest))
@@ -154,7 +154,7 @@ in the gyou."
              (setq chars (cons c rest)))
             ;; consonant + vowel
             ((and `(,c ,v . ,rest)
-                  (let r (map-elt riyu-decode--char-table-1 (list c v)))
+                  (let r (map-elt riben-decode--char-table-1 (list c v)))
                   (guard r))
              (insert r)
              (setq chars rest))
@@ -166,13 +166,13 @@ in the gyou."
                                         (?e . "ぇ")
                                         (?o . "ょ"))))
                   (guard a)
-                  (let r (map-elt riyu-decode--char-table-1 (list c ?i)))
+                  (let r (map-elt riben-decode--char-table-1 (list c ?i)))
                   (guard r))
              (insert (concat r a))
              (setq chars rest))
             ;; two consonants + vowel
             ((and `(,c1 ,c2 ,v . ,rest)
-                  (let r (map-elt riyu-decode--char-table-2 (list c1 c2 v)))
+                  (let r (map-elt riben-decode--char-table-2 (list c1 c2 v)))
                   (guard r))
              (insert r)
              (setq chars rest))
@@ -181,5 +181,5 @@ in the gyou."
              (setq chars rest))))
         (buffer-string)))))
 
-(provide 'riyu-decode)
-;;; riyu-decode.el ends here
+(provide 'riben-decode)
+;;; riben-decode.el ends here
