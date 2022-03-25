@@ -1,0 +1,35 @@
+* Dumb Japanese Input Method for Emacs (riben.el)
+This is a Japanese input method for Emacs that depends on a service of Google.
+It does not require a native library/executable (unlike mozc.el), nor an offline dictionary (unlike ddskk).
+It is written in pure Emacs Lisp and depends on the internet.
+
+The Mandarin Chinese word meaning Japan is 日本 / Rì běn (ri4 ben3), but this input method is 日笨 / Rì bèn (ri4 ben4).
+However, since it requires connection to Google, it is unlikely you can use it in the mainland China.
+You can use it in Japan.
+** Rationale
+The goal of this input method is to provide an input method for the language that has minimal dependencies but is still usable.
+
+It is not suitable for serious writers.
+It is primarily intended for daily communication at work.
+Its features are limited, and you may find it difficult to produce exact transliteration you want to express.
+The problem is not going to be solved.
+** Usage
+Switch to =japanese-riben= input method, or turn on =riben-mode=.
+
+It transliterates the input when you press colon, period, or space.
+
+If you need to type katakana, switch to the built-in =japanese-katakana= input method.
+** Alternatives
+As far I know, there are a couple of Japanese input methods for Emacs that are actively developed:
+
+- [[https://github.com/skk-dev/ddskk/][DDSKK]], which requires dictionaries
+- [[https://github.com/google/mozc/][Mozc]] (a.k.a. Google Japanese Input), which requires a binary
+
+Another option would be [[https://github.com/gkovacs/rime-japanese][rime-japanese]], which is a schema for the [[https://github.com/rime][RIME]] input engine, which is primarily developed for Chinese speaking people.
+[[https://github.com/tumashu/pyim][PYIM]] supports rime, so it would be possible to use rime-japanese via pyim.
+Unfortunately, these options are relatively hard to set up, and it does not officially support Emacs 29 yet.
+** Inspirations
+This project was originally inspired by the following projects:
+
+- [[https://github.com/igjit/ac-mozc][ac-mozc]]
+- [[http://blog.sushi.money/entry/20110421/1303274561][Google IME SKK サーバー 作った]]
