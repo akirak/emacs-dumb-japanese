@@ -132,13 +132,18 @@ and vanishes the space."
                    (throw 'riben-self-insert t))
                (cl-incf beg)))))))
     (`(,_ . ,c)
-     (when (eq (get-char-property (1- (point)) 'riben--counter) riben--counter)
-       (backward-delete-char n)
+     (if (eq (get-char-property (- (point) 2) 'riben--counter) riben--counter)
+         (progn
+           (backward-delete-char n)
+           (when c
+             (insert c)
+             (backward-char))
+           (when (eq riben--counter (get-char-property (1- (point)) 'riben--counter))
+             (riben-dispatch (when c 1))))
        (when c
-         (insert c)
-         (backward-char))
-       (when (eq riben--counter (get-char-property (1- (point)) 'riben--counter))
-         (riben-dispatch (when c 1)))))))
+         (backward-delete-char n)
+         (when c
+           (insert c)))))))
 
 (defun riben-dispatch (&optional arg)
   (interactive)
