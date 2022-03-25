@@ -47,7 +47,6 @@
 (defvar riben-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m [remap self-insert-command] #'riben-self-insert-command)
-    (define-key m [remap newline] #'riben-newline)
     (define-key m "q" #'riben-mode-disable)
     m))
 
@@ -96,12 +95,6 @@ and vanishes the space."
 (defun riben-mode-disable ()
   (interactive)
   (riben-mode -1))
-
-(defun riben-newline ()
-  (interactive)
-  (if (eq riben--counter (get-char-property (1- (point)) 'riben--counter))
-      (cl-incf riben--counter)
-    (newline nil t)))
 
 (defun riben-self-insert-command (n &optional c)
   (interactive "p")
