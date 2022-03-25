@@ -2,7 +2,6 @@
 
 (require 'riben-google)
 (require 'riben-decode)
-(require 'mule-cmds)
 
 (defvar riben-mode-map
   (let ((m (make-sparse-keymap)))
