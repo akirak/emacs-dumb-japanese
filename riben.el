@@ -190,10 +190,12 @@ and vanishes the space."
            (if-let (x (pop riben--remaining-candidates))
                (progn
                  (setq riben--segment (car x))
-                 (search-forward riben--segment)
-                 (setq riben--match-data (match-data))
-                 (riben-posframe-complete (cadr x) #'confirm
-                                          :point (match-beginning 0)))
+                 (if (string-match-p (rx bol (+ space) eol) riben--segment)
+                     (next)
+                   (search-forward riben--segment)
+                   (setq riben--match-data (match-data))
+                   (riben-posframe-complete (cadr x) #'confirm
+                                            :point (match-beginning 0))))
              (when (numberp forward-char)
                (forward-char forward-char))
              (when (eq this-command #'riben-self-insert-command)
