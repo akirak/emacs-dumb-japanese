@@ -16,7 +16,7 @@ The problem is not going to be solved.
 ** Usage
 Switch to =japanese-riben= input method, or turn on =riben-mode=.
 
-It transliterates the input when you press colon, period, or space.
+It transliterates the input when you press a comma, period, or space.
 
 If you need to type katakana, switch to the built-in =japanese-katakana= input method.
 ** Alternatives
