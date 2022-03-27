@@ -159,8 +159,8 @@ and vanishes the space."
                                   (text-property-search-forward
                                    'riben--counter counter t)))))
       (riben--dispatch (prop-match-beginning prop-match)
-                      (prop-match-end prop-match)
-                      counter arg))))
+                       (prop-match-end prop-match)
+                       counter arg))))
 
 (defun riben-on-region (begin end)
   (interactive "r")
