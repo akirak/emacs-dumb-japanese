@@ -37,7 +37,9 @@
 
 (require 'riben-decode)
 (require 'riben-google)
-(declare-function avy-jump "ext:avy")
+(require 'avy)
+
+(defvar avy-timeout-seconds)
 
 ;;;###autoload
 (defun avy-riben (input)
