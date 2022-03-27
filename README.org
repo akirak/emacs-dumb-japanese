@@ -19,6 +19,8 @@ Switch to =japanese-riben= input method, or turn on =riben-mode=.
 It transliterates the input when you press a comma, period, or space.
 
 If you need to type katakana, switch to the built-in =japanese-katakana= input method.
+
+=avy-riben= command jumps the point to text using [[https://github.com/abo-abo/avy][avy]] like [[https://github.com/momomo5717/avy-migemo][avy-migemo]] does, but without dictionary files.
 ** Alternatives
 As far I know, there are a couple of Japanese input methods for Emacs that are actively developed:
 
