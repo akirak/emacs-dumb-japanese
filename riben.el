@@ -38,6 +38,7 @@
 (require 'riben-google)
 (require 'riben-decode)
 (require 'riben-posframe)
+(require 'text-property-search)
 
 (defgroup riben nil
   "A dumb Japanese input method."
