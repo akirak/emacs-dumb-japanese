@@ -98,7 +98,7 @@ and vanishes the space."
 
 ;;;###autoload
 (register-input-method "japanese-riben" "Japanese" #'riben-mode
-                       "日笨" "Riben ")
+                       "日语日本" "Riben ")
 
 (defun riben-mode-disable ()
   (interactive)
