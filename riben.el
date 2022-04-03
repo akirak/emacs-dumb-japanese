@@ -174,13 +174,8 @@ and vanishes the space."
            (replace)
            (when replace
              (let* ((start (marker-position (car riben--match-data)))
-                    (original (thread-last
-                                (number-sequence start (marker-position
-                                                        (nth 1 riben--match-data)))
-                                (mapcar (lambda (i)
-                                          (get-char-property i 'riben-original)))
-                                (delq nil)
-                                (apply #'concat))))
+                    (original (riben--original start (marker-position
+                                                      (nth 1 riben--match-data)))))
                (set-match-data riben--match-data)
                (replace-match replace)
                (put-text-property start (point) 'riben--counter counter)
@@ -203,6 +198,15 @@ and vanishes the space."
                (cl-incf riben--counter)))))
       (goto-char begin)
       (next))))
+
+(defun riben--original (start end)
+  "Return `riben-original' property in a region."
+  (thread-last
+    (number-sequence start end)
+    (mapcar (lambda (i)
+              (get-char-property i 'riben-original)))
+    (delq nil)
+    (apply #'concat)))
 
 (provide 'riben)
 ;;; riben.el ends here
