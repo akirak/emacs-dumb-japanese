@@ -98,7 +98,9 @@ in the gyou."
 (defconst riben-decode--char-table-2
   (let* ((pairs `(((?s ?h) . ("しゃ" "し" "しゅ" "しぇ" "しょ"))
                   ((?c ?h) . ("ちゃ" "ち" "ちゅ" "ちぇ" "ちょ"))
-                  ((?t ?s) . ("つぁ" "ち" "つ" "つぇ" "つぉ"))))
+                  ((?t ?s) . ("つぁ" "ち" "つ" "つぇ" "つぉ"))
+                  ((?t ?y) . ("ちゃ" "てぃ" "ちゅ" "ちぇ" "ちょ"))
+                  ((?d ?y) . ("ぢゃ" "でぃ" "どぅ" "でぇ" "どぉ"))))
          (tbl (make-hash-table :size (* 5 (length pairs))
                                :test #'equal)))
     (pcase-dolist (`(,consonant . ,entries) pairs)
