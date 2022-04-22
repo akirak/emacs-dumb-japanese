@@ -146,6 +146,21 @@ and vanishes the space."
          (when c
            (insert c)))))))
 
+;;;###autoload
+(defun riben-insert-from-minibuffer ()
+  "Insert Japanese from the minibuffer."
+  (interactive)
+  (when-let (input (minibuffer-with-setup-hook
+                       (lambda ()
+                         (riben-mode t))
+                     (read-from-minibuffer "" nil nil nil nil nil nil)))
+    (insert input)))
+
+(defun riben-clear-properties ()
+  "Clear counter properties in the current buffer."
+  (interactive)
+  (remove-text-properties (point-min) (point-max) '(riben--counter)))
+
 (defun riben-dispatch (&optional arg)
   (interactive)
   (if (region-active-p)
