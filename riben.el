@@ -79,7 +79,8 @@ and vanishes the space."
                                     (const nil))))
 
 (defcustom riben-continue-commands
-  '(delete-backward-char)
+  '(delete-backward-char
+    forward-char)
   "List of commands that does not terminate input."
   :type '(repeat symbol))
 
@@ -114,37 +115,45 @@ and vanishes the space."
                      (point)
                      'riben--counter
                      riben--counter)
-  (pcase (assq (char-after (1- (point))) riben-dispatch-trigger-alist)
-    (`nil
-     (when (thing-at-point-looking-at riben-decode-regexp 3)
-       (let ((beg (match-beginning 0))
-             (end (match-end 0)))
-         (catch 'riben-self-insert
-           (while (< beg end)
-             (if (eq (get-char-property beg 'riben--counter) riben--counter)
-                 (let* ((orig (buffer-substring-no-properties beg end))
-                        (new (riben-decode-romaji orig)))
-                   (unless (equal new orig)
-                     (delete-region beg end)
-                     (goto-char beg)
-                     (insert new)
-                     (put-text-property beg (point) 'riben--counter riben--counter)
-                     (put-text-property beg (1+ beg) 'riben-original orig))
-                   (throw 'riben-self-insert t))
-               (cl-incf beg)))))))
-    (`(,_ . ,c)
-     (if (eq (get-char-property (- (point) 2) 'riben--counter) riben--counter)
-         (progn
+  (let ((c (char-after (1- (point)))))
+    (pcase (assq c riben-dispatch-trigger-alist)
+      (`nil
+       (when (thing-at-point-looking-at riben-decode-regexp 3)
+         (let ((beg (match-beginning 0))
+               (end (match-end 0)))
+           (catch 'riben-self-insert
+             (while (< beg end)
+               (if (eq (get-char-property beg 'riben--counter) riben--counter)
+                   (let* ((orig (buffer-substring-no-properties beg end))
+                          (new (riben-decode-romaji orig)))
+                     (unless (equal new orig)
+                       (delete-region beg end)
+                       (goto-char beg)
+                       (insert new)
+                       (put-text-property beg (point) 'riben--counter riben--counter)
+                       (put-text-property beg (1+ beg) 'riben-original orig)
+                       ;; If electric-pair-mode is turned on, the cursor will be
+                       ;; after the closing bracket, so move the cursor backward
+                       ;; by one character.
+                       (when (and (eq n 1)
+                                  (eq 40 (char-syntax c))
+                                  (eq 2 (length new)))
+                         (backward-char)))
+                     (throw 'riben-self-insert t))
+                 (cl-incf beg)))))))
+      (`(,_ . ,c2)
+       (if (eq (get-char-property (- (point) 2) 'riben--counter) riben--counter)
+           (progn
+             (backward-delete-char n)
+             (when c2
+               (insert c2)
+               (backward-char))
+             (when (eq riben--counter (get-char-property (1- (point)) 'riben--counter))
+               (riben-dispatch (when c2 1))))
+         (when c2
            (backward-delete-char n)
-           (when c
-             (insert c)
-             (backward-char))
-           (when (eq riben--counter (get-char-property (1- (point)) 'riben--counter))
-             (riben-dispatch (when c 1))))
-       (when c
-         (backward-delete-char n)
-         (when c
-           (insert c)))))))
+           (when c2
+             (insert c2))))))))
 
 ;;;###autoload
 (defun riben-insert-from-minibuffer ()
