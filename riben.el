@@ -174,9 +174,8 @@ and vanishes the space."
   (interactive)
   (if (region-active-p)
       (riben-on-region (region-beginning) (region-end))
-    (when-let* ((counter (or (get-char-property (point) 'riben--counter)
-                             (and (> (point) 1)
-                                  (get-char-property (1- (point)) 'riben--counter))))
+    (when-let* ((counter (when (> (point) 1)
+                           (get-char-property (1- (point)) 'riben--counter)))
                 (prop-match (save-excursion
                               (or (text-property-search-backward
                                    'riben--counter counter t)
