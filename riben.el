@@ -231,5 +231,10 @@ and vanishes the space."
     (delq nil)
     (apply #'concat)))
 
+(defun riben-inc-counter ()
+  "Increment the counter to confirm the last input."
+  (interactive)
+  (cl-incf riben--counter))
+
 (provide 'riben)
 ;;; riben.el ends here
