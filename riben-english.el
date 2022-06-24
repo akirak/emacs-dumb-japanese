@@ -1,6 +1,7 @@
 ;;; riben-english.el --- Transliterate English words into Katakana -*- lexical-binding: t -*-
 
 (require 'riben-google)
+(require 'riben-katakana)
 
 (defface riben-english-transient-face
   '((t (:inherit default :background "#333377")))
@@ -135,7 +136,7 @@
   "Register a new WORD."
   (minibuffer-with-setup-hook
       (lambda ()
-        (set-input-method 'japanese-katakana))
+        (set-input-method 'riben-katakana))
     (read-string (format "%s: " word))))
 
 (defun riben-english--record (input result)
