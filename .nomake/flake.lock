@@ -32,6 +32,38 @@
         "type": "github"
       }
     },
+    "emacsql": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1649434493,
+        "narHash": "sha256-mkTCzBrq8ny40j//ZoNdZiH1rEZM08b9DkBcDGCQilw=",
+        "owner": "skeeto",
+        "repo": "emacsql",
+        "rev": "373975cbccf7776af771e23f86043b236a330702",
+        "type": "github"
+      },
+      "original": {
+        "owner": "skeeto",
+        "repo": "emacsql",
+        "type": "github"
+      }
+    },
+    "emacsql-sqlite": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1649434493,
+        "narHash": "sha256-mkTCzBrq8ny40j//ZoNdZiH1rEZM08b9DkBcDGCQilw=",
+        "owner": "skeeto",
+        "repo": "emacsql",
+        "rev": "373975cbccf7776af771e23f86043b236a330702",
+        "type": "github"
+      },
+      "original": {
+        "owner": "skeeto",
+        "repo": "emacsql",
+        "type": "github"
+      }
+    },
     "posframe": {
       "flake": false,
       "locked": {
@@ -68,6 +100,8 @@
       "inputs": {
         "avy": "avy",
         "avy-riben": "avy-riben",
+        "emacsql": "emacsql",
+        "emacsql-sqlite": "emacsql-sqlite",
         "posframe": "posframe",
         "riben": "riben"
       }

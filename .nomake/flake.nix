@@ -14,6 +14,18 @@
       repo = "emacs-dumb-japanese";
       type = "github";
     };
+    emacsql = {
+      flake = false;
+      owner = "skeeto";
+      repo = "emacsql";
+      type = "github";
+    };
+    emacsql-sqlite = {
+      flake = false;
+      owner = "skeeto";
+      repo = "emacsql";
+      type = "github";
+    };
     posframe = {
       flake = false;
       owner = "tumashu";
