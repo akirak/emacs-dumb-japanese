@@ -141,7 +141,7 @@
   "Register a new WORD."
   (minibuffer-with-setup-hook
       (lambda ()
-        (set-input-method 'riben-katakana))
+        (riben-katakana-mode t))
     (read-string (format "%s: " word))))
 
 (defun riben-english--record (input result)
