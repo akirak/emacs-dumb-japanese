@@ -65,7 +65,7 @@
                 :width (+ 4 (* 2 (apply #'max (mapcar #'length candidates))))
                 :position point)))
     (set-transient-map riben-posframe-map #'riben-posframe--keep-p
-                       #'riben-posframe-confirm)))
+                       #'riben-posframe-exit)))
 
 (defun riben-posframe--keep-p ()
   (memq this-command '(riben-posframe-next
@@ -113,9 +113,12 @@
     (insert (riben-posframe--format-candidates)))
   (posframe-refresh riben-posframe-buffer))
 
+(defun riben-posframe-exit ()
+  (interactive)
+  (posframe-hide riben-posframe-buffer))
+
 (defun riben-posframe-confirm ()
   (interactive)
-  (posframe-hide riben-posframe-buffer)
   (funcall riben-posframe--callback
            (elt riben-posframe--candidates riben-posframe--selection)))
 
