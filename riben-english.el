@@ -6,6 +6,10 @@
   '((t (:inherit default :background "#333377")))
   "")
 
+(defcustom riben-english-dispatch-hook nil
+  ""
+  :type 'hook)
+
 ;;;###autoload
 (register-input-method "japanese-riben-english" "Japanese Katakana"
                        #'riben-english-mode
@@ -65,7 +69,8 @@
         (let ((begin (overlay-start ov))
               (end (overlay-end ov)))
           (delete-overlay ov)
-          (riben-english--translate-to-katakana begin end))
+          (riben-english--translate-to-katakana begin end)
+          (run-hooks 'riben-english-dispatch-hook))
       (user-error "No overlay at point"))))
 
 (defun riben-english--translate-to-katakana (begin end)
@@ -83,7 +88,8 @@
         (let ((begin (overlay-start ov))
               (end (overlay-end ov)))
           (delete-overlay ov)
-          (riben-english--translate begin end))
+          (riben-english--translate begin end)
+          (run-hooks 'riben-english-dispatch-hook))
       (user-error "No overlay at point"))))
 
 (defun riben-english--translate (begin end)
