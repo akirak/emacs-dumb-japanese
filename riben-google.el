@@ -34,6 +34,12 @@
   :group 'riben
   :type 'string)
 
+(defcustom riben-google-translate-url
+  "https://translate.google.com/translate_a/single"
+  ""
+  :group 'riben
+  :type 'string)
+
 (defcustom riben-google-timeout 2
   ""
   :group 'riben
@@ -54,6 +60,53 @@
 
 (defun riben-google-from-hiragana (input)
   (riben-google--request input))
+
+(cl-defun riben-google--translate (input &key
+                                         (source-language "en")
+                                         (target-language "ja"))
+  ;; Please install go-translate.
+  (require 'gts-engine-google)
+  (let ((buffer (url-retrieve-synchronously
+                 (format "%s?%s"
+                         riben-google-translate-url
+                         (string-join `("client=t"
+                                        "ie=UTF-8"
+                                        "oe=UTF-8"
+                                        ,(concat "sl=" source-language)
+                                        ,(concat "tl=" target-language)
+                                        ,(concat "q=" (url-hexify-string input))
+                                        "dt=bd"
+                                        "pc=1"
+                                        "otf=1"
+                                        "srcrom=1"
+                                        "ssel=0"
+                                        "tsel=0"
+                                        ,(concat "tk="
+                                                 (gts-google-tkk '(430675 . 2721866130) input)))
+                                      "&"))
+                 'silent nil)))
+    (unwind-protect
+        (with-current-buffer buffer
+          (set-buffer-multibyte t)
+          (goto-char (point-min))
+          (when (bound-and-true-p url-http-end-of-headers)
+            (delete-region (point) url-http-end-of-headers))
+          (json-parse-buffer :array-type 'list
+                             :null-object nil))
+      (kill-buffer buffer))))
+
+(defun riben-google-translate-part-of-speech (type result)
+  "Select candidates that match a part of speech.
+
+This function returns candidates that match a part of speech,
+denoted by TYPE. RESULT should be a response tree returned by
+`riben-google-translate-retrieve'."
+  (thread-last
+    result
+    (nth 1)
+    (assoc type)
+    (cdr)
+    (car)))
 
 (provide 'riben-google)
 ;;; riben-google.el ends here
