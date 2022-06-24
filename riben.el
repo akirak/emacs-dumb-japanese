@@ -243,11 +243,11 @@ and vanishes the space."
                                             :point (match-beginning 0))))
              (when (numberp forward-char)
                (forward-char forward-char))
-             (when (eq this-command #'riben-self-insert-command)
-               (cl-incf riben--counter))
              (run-hooks 'riben-dispatch-hook))))
       (goto-char begin)
-      (next))))
+      (next)
+      (when (eq this-command #'riben-self-insert-command)
+        (cl-incf riben--counter)))))
 
 (defun riben--original (start end)
   "Return `riben-original' property in a region."
