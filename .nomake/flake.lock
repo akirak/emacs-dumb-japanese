@@ -1,0 +1,78 @@
+{
+  "nodes": {
+    "avy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1641110707,
+        "narHash": "sha256-lGs7IFQvoskuRkEoN3N+rTJa3dQ/3WUL3Yj03bvMNV4=",
+        "owner": "abo-abo",
+        "repo": "avy",
+        "rev": "ba5f035be33693d1a136a5cbeedb24327f551a92",
+        "type": "github"
+      },
+      "original": {
+        "owner": "abo-abo",
+        "repo": "avy",
+        "type": "github"
+      }
+    },
+    "avy-riben": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1656078893,
+        "narHash": "sha256-T5oxA1dZWlSbmMICIpbP/uOYJZH9haPj2YjaEOy0BL4=",
+        "owner": "akirak",
+        "repo": "emacs-dumb-japanese",
+        "rev": "5704c990b1bced099866f84849e1cbd544b310f2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akirak",
+        "repo": "emacs-dumb-japanese",
+        "type": "github"
+      }
+    },
+    "posframe": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1653697654,
+        "narHash": "sha256-XKxFg6Wy1xpgcdliJOaDq4nP8hH4EuoQgaMmGqCfgtw=",
+        "owner": "tumashu",
+        "repo": "posframe",
+        "rev": "0d23bc5f7cfac00277d83ae7ba52c48685bcbc68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tumashu",
+        "repo": "posframe",
+        "type": "github"
+      }
+    },
+    "riben": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1656078893,
+        "narHash": "sha256-T5oxA1dZWlSbmMICIpbP/uOYJZH9haPj2YjaEOy0BL4=",
+        "owner": "akirak",
+        "repo": "emacs-dumb-japanese",
+        "rev": "5704c990b1bced099866f84849e1cbd544b310f2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akirak",
+        "repo": "emacs-dumb-japanese",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "avy": "avy",
+        "avy-riben": "avy-riben",
+        "posframe": "posframe",
+        "riben": "riben"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

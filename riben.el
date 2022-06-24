@@ -39,6 +39,9 @@
 (require 'riben-decode)
 (require 'riben-posframe)
 (require 'text-property-search)
+(require 'thingatpt)
+
+(declare-function riben-english-mode "riben-english")
 
 (defgroup riben nil
   "A dumb Japanese input method."
@@ -55,7 +58,6 @@
 (defvar riben-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m [remap self-insert-command] #'riben-self-insert-command)
-    (define-key m "q" #'riben-mode-disable)
     m))
 
 (defcustom riben-dispatch-trigger-alist
@@ -78,6 +80,10 @@ and vanishes the space."
                                     string
                                     (const nil))))
 
+(defcustom riben-dispatch-hook nil
+  ""
+  :type 'hook)
+
 (defcustom riben-continue-commands
   '(delete-backward-char
     forward-char)
@@ -96,6 +102,27 @@ and vanishes the space."
   (when riben-mode
     (setq deactivate-current-input-method-function
           #'riben-mode-disable)))
+
+(defun riben-switch-to-english-mode ()
+  (interactive)
+  (if (and (> (point) (point-min))
+           (eq (get-char-property (1- (point)) 'riben--counter)
+               riben--counter))
+      (progn
+        (add-hook 'riben-dispatch-hook #'riben--switch-to-english-mode)
+        (riben-dispatch))
+    (riben--switch-to-english-mode)))
+
+(defun riben--switch-to-english-mode ()
+  (remove-hook 'riben-dispatch-hook #'riben--switch-to-english-mode)
+  (riben-mode-disable)
+  (add-hook 'riben-english-dispatch-hook #'riben-switch-back-from-english-mode)
+  (riben-english-mode))
+
+(defun riben-switch-back-from-english-mode ()
+  (riben-english-mode -1)
+  (riben-mode t)
+  (remove-hook 'riben-english-dispatch-hook #'riben-switch-back-from-english-mode))
 
 ;;;###autoload
 (register-input-method "japanese-riben" "Japanese" #'riben-mode
@@ -217,10 +244,11 @@ and vanishes the space."
                                             :point (match-beginning 0))))
              (when (numberp forward-char)
                (forward-char forward-char))
-             (when (eq this-command #'riben-self-insert-command)
-               (cl-incf riben--counter)))))
+             (run-hooks 'riben-dispatch-hook))))
       (goto-char begin)
-      (next))))
+      (next)
+      (when (eq this-command #'riben-self-insert-command)
+        (cl-incf riben--counter)))))
 
 (defun riben--original (start end)
   "Return `riben-original' property in a region."
