@@ -2,11 +2,18 @@
 
 (require 'riben-google)
 (require 'riben-katakana)
+(require 'riben-database)
+(require 'emacsql)
 
 (defgroup riben-english nil
   "A Japanese input method that translates English."
   :prefix "riben-english-"
   :group 'riben)
+
+(defcustom riben-english-database-file
+  (locate-user-emacs-file "riben/english.sqlite")
+  ""
+  :type 'file)
 
 (defface riben-english-transient-face
   '((t (:inherit default :background "#333377")))
@@ -15,6 +22,20 @@
 (defcustom riben-english-dispatch-hook nil
   ""
   :type 'hook)
+
+(defvar riben-english-database-connection nil)
+
+;;;; Macros
+(defmacro riben-english-with-database (var &rest progn)
+  (declare (indent 1))
+  `(let ((,var (riben-english--open-database)))
+     (unwind-protect
+         (progn
+           ,@progn)
+       (emacsql-close ,var)
+       (setq riben-english-database-connection nil))))
+
+;;;; Japanese input
 
 ;;;###autoload
 (register-input-method "japanese-riben-english" "Japanese Katakana"
@@ -108,23 +129,26 @@
 ;;;###autoload
 (defun riben-english-insert (input)
   (interactive "sEnglish: ")
-  (if-let (existing (riben-english--lookup input))
-      (insert existing)
-    (pcase (riben-english--katakana-candidates input)
-      (`(,sole)
-       (riben-english--record-and-insert input sole))
-      (`nil
-       (let ((words (split-string input)))
-         (if (> (length words) 1)
-             (dolist (word words)
-               (riben-english-insert word))
-           (riben-english--record-and-insert
-            input
-            (riben-english--prompt-new-word input)))))
-      (candidates
-       (riben-posframe-complete candidates
-                                (apply-partially #'riben-english--record-and-insert
-                                                 input))))))
+  (riben-english-with-database db
+    (if-let (existing (riben-english--lookup db input))
+        (insert existing)
+      (pcase (riben-english--katakana-candidates input)
+        (`(,sole)
+         (riben-english--record-and-insert db input sole))
+        (`nil
+         (let ((words (split-string input)))
+           (if (> (length words) 1)
+               (dolist (word words)
+                 (riben-english-insert word))
+             (riben-english--record-and-insert
+              db
+              input
+              (riben-english--prompt-new-word input)))))
+        (candidates
+         (riben-posframe-complete candidates
+                                  (apply-partially #'riben-english--record-and-insert
+                                                   db
+                                                   input)))))))
 
 ;;;###autoload
 (defun riben-english-insert-translation (input)
@@ -144,16 +168,6 @@
         (riben-katakana-mode t))
     (read-string (format "%s: " word))))
 
-(defun riben-english--record (input result)
-  (push `(,input . ,result) riben-english-alist))
-
-(defun riben-english--record-and-insert (input result)
-  (riben-english--record input result)
-  (insert result))
-
-(defun riben-english--lookup (input)
-  (cdr (assoc input riben-english-alist)))
-
 (defun riben-english--all-candidates (input)
   (thread-last
     (riben-google--translate input)
@@ -170,6 +184,57 @@
 (defun riben-english-p (string)
   (string-match-p (rx bos (+ (category japanese-katakana-two-byte)) eos)
                   string))
+
+;;;; Database
+
+(defun riben-english--open-database ()
+  (or (riben-english--live-connection)
+      (let ((dir (file-name-directory riben-english-database-file))
+            (new (not (file-exists-p riben-english-database-file))))
+        (unless (file-directory-p dir)
+          (make-directory dir))
+        (let ((conn (funcall riben-database-backend riben-english-database-file)))
+          (add-hook 'kill-emacs-hook #'riben-english-close-database)
+          (condition-case _
+              (progn
+                (when new
+                  (emacsql conn [:create-table-if-not-exists
+                                 katakana ([(english text :primary-key)
+                                            (katakana text)])]))
+                (setq riben-english-database-connection conn))
+            (error (emacsql-close conn)))))))
+
+(defun riben-english--live-connection ()
+  (when (and riben-english-database-connection
+             (emacsql-live-p riben-english-database-connection))
+    riben-english-database-connection))
+
+(defun riben-english-close-database ()
+  (when-let (conn (riben-english--live-connection))
+    (emacsql-close conn)))
+
+;;;###autoload
+(defun riben-english-register-katakana (english katakana)
+  (interactive (let* ((english (read-string "English: "))
+                      (katakana (riben-english--prompt-new-word english)))
+                 (list english katakana)))
+  (riben-english-with-database db
+    (riben-english--record db english katakana)))
+
+(defun riben-english--record (db input result)
+  (emacsql db [:insert-or-replace :into katakana
+                                  :values $v1]
+           (vector input result)))
+
+(defun riben-english--record-and-insert (db input result)
+  (riben-english--record db input result)
+  (insert result))
+
+(defun riben-english--lookup (db input)
+  (caar (emacsql db [:select katakana
+                             :from katakana
+                             :where (= english $s1)]
+                 input)))
 
 (provide 'riben-english)
 ;;; riben-english.el ends here
