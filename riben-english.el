@@ -3,6 +3,11 @@
 (require 'riben-google)
 (require 'riben-katakana)
 
+(defgroup riben-english nil
+  "A Japanese input method that translates English."
+  :prefix "riben-english-"
+  :group 'riben)
+
 (defface riben-english-transient-face
   '((t (:inherit default :background "#333377")))
   "")
@@ -47,7 +52,7 @@
      (progn
        (backward-delete-char n)
        (riben-english-translate)))
-    (t
+    (_
      (if-let (ov (riben-english--overlay (- (point) n)))
          (setf (overlay-end ov) (point))
        (let ((ov (make-overlay (- (point) n) (point))))
@@ -154,7 +159,7 @@
     (riben-google--translate input)
     (cadr)
     (mapcar (lambda (cell) (nth 1 cell)))
-    (-flatten-n 1)))
+    (apply #'append)))
 
 (defun riben-english--katakana-candidates (input)
   (thread-last

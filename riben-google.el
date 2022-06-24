@@ -29,6 +29,8 @@
 
 (require 'url-http)
 
+(declare-function gts-google-tkk "ext:gts-engine-google")
+
 (defcustom riben-google-url "https://www.google.com/transliterate"
   "Endpoint url."
   :group 'riben
@@ -65,7 +67,8 @@
                                          (source-language "en")
                                          (target-language "ja"))
   ;; Please install go-translate.
-  (require 'gts-engine-google)
+  (or (require 'gts-engine-google nil t)
+      (error "You need to install go-translate package"))
   (let ((buffer (url-retrieve-synchronously
                  (format "%s?%s"
                          riben-google-translate-url

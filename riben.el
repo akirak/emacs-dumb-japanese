@@ -39,6 +39,9 @@
 (require 'riben-decode)
 (require 'riben-posframe)
 (require 'text-property-search)
+(require 'thingatpt)
+
+(declare-function riben-english-mode "riben-english")
 
 (defgroup riben nil
   "A dumb Japanese input method."

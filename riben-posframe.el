@@ -2,6 +2,11 @@
 
 (require 'posframe)
 
+(defgroup riben-posframe nil
+  ""
+  :group 'riben
+  :group 'faces)
+
 (defconst riben-posframe-buffer "*riben posframe*")
 
 (defcustom riben-posframe-access-keys
@@ -56,16 +61,16 @@
   (setq riben-posframe--candidates candidates
         riben-posframe--callback callback
         riben-posframe--selection 0)
-  (let ((frame (posframe-show
-                riben-posframe-buffer
-                :string (riben-posframe--format-candidates)
-                :foreground-color (face-foreground 'riben-posframe-inactive-face nil t)
-                :background-color (face-background 'riben-posframe-inactive-face nil t)
-                :height (length candidates)
-                :width (+ 4 (* 2 (apply #'max (mapcar #'length candidates))))
-                :position point)))
-    (set-transient-map riben-posframe-map #'riben-posframe--keep-p
-                       #'riben-posframe-exit)))
+  (posframe-show
+   riben-posframe-buffer
+   :string (riben-posframe--format-candidates)
+   :foreground-color (face-foreground 'riben-posframe-inactive-face nil t)
+   :background-color (face-background 'riben-posframe-inactive-face nil t)
+   :height (length candidates)
+   :width (+ 4 (* 2 (apply #'max (mapcar #'length candidates))))
+   :position point)
+  (set-transient-map riben-posframe-map #'riben-posframe--keep-p
+                     #'riben-posframe-exit))
 
 (defun riben-posframe--keep-p ()
   (memq this-command '(riben-posframe-next
