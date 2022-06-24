@@ -55,8 +55,6 @@
 (defvar riben-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m [remap self-insert-command] #'riben-self-insert-command)
-    (define-key m "q" #'riben-mode-disable)
-    (define-key m "@" #'riben-switch-to-english-mode)
     m))
 
 (defcustom riben-dispatch-trigger-alist
