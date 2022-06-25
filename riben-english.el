@@ -43,9 +43,11 @@
 ;;;; Japanese input
 
 ;;;###autoload
-(register-input-method "japanese-riben-english" "Japanese Katakana"
+(register-input-method "japanese-riben-english"
+                       "Japanese"
                        #'riben-english-mode
-                       "カナ" "Riben-English ")
+                       "英语翻译"
+                       "Riben-English ")
 
 (defvar riben-english-mode-map
   (let ((m (make-sparse-keymap)))

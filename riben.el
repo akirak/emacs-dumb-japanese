@@ -143,8 +143,11 @@ This function should be manually hooked in each mode."
   (remove-hook 'riben-english-dispatch-hook #'riben-switch-back-from-english-mode))
 
 ;;;###autoload
-(register-input-method "japanese-riben" "Japanese" #'riben-mode
-                       "日语日本" "Riben ")
+(register-input-method "japanese-riben"
+                       "Japanese"
+                       #'riben-mode
+                       "日语"
+                       "Riben ")
 
 (defun riben-mode-disable ()
   (interactive)
