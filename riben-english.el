@@ -11,8 +11,8 @@
   :group 'riben)
 
 (defcustom riben-english-dispatcher-alist
-  '((32 . riben-english-translate-to-katakana)
-    (46 . riben-english-translate))
+  '((32 . riben-english-to-katakana)
+    (46 . riben-english-to-japanese))
   "Alist of keybindings that escapes self insertion."
   :type '(alist :key-type key
                 :value-type function))
@@ -97,7 +97,8 @@
     (seq-find (lambda (ov)
                 (overlay-get ov 'riben-english)))))
 
-(defun riben-english-translate-to-katakana ()
+(defun riben-english-to-katakana ()
+  "Translate the text into Katakana."
   (interactive)
   (if (region-active-p)
       (save-excursion
@@ -117,7 +118,8 @@
     (delete-region begin end)
     (riben-english-insert input)))
 
-(defun riben-english-translate ()
+(defun riben-english-to-japanese ()
+  "Translate the text into Japanese."
   (interactive)
   (if (region-active-p)
       (save-excursion
