@@ -10,6 +10,13 @@
   :prefix "riben-english-"
   :group 'riben)
 
+(defcustom riben-english-dispatcher-alist
+  '((32 . riben-english-translate-to-katakana)
+    (46 . riben-english-translate))
+  "Alist of keybindings that escapes self insertion."
+  :type '(alist :key-type key
+                :value-type function))
+
 (defcustom riben-english-database-file
   (locate-user-emacs-file "riben/english.sqlite")
   ""
@@ -73,23 +80,16 @@
 (defun riben-english-self-insert (n &optional c)
   (interactive "p")
   (self-insert-command n c)
-  (pcase (char-after (1- (point)))
-    ;; space
-    (32
-     (progn
-       (backward-delete-char n)
-       (riben-english-translate-to-katakana)))
-    ;; period
-    (46
-     (progn
-       (backward-delete-char n)
-       (riben-english-translate)))
-    (_
-     (if-let (ov (riben-english--overlay (- (point) n)))
-         (setf (overlay-end ov) (point))
-       (let ((ov (make-overlay (- (point) n) (point))))
-         (overlay-put ov 'face 'riben-english-transient-face)
-         (overlay-put ov 'riben-english t))))))
+  (if-let (func (cdr (assq (char-after (1- (point)))
+                           riben-english-dispatcher-alist)))
+      (progn
+        (backward-delete-char n)
+        (funcall func))
+    (if-let (ov (riben-english--overlay (- (point) n)))
+        (setf (overlay-end ov) (point))
+      (let ((ov (make-overlay (- (point) n) (point))))
+        (overlay-put ov 'face 'riben-english-transient-face)
+        (overlay-put ov 'riben-english t)))))
 
 (defun riben-english--overlay (&optional pos)
   (thread-last
