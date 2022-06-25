@@ -16,6 +16,7 @@
   "A Katakana input mode."
   :lighter "Riben Katakana "
   (when riben-katakana-mode
+    (riben-turn-off-the-other-modes 'riben-katakan-mode)
     (setq deactivate-current-input-method-function
           #'riben-katakana-mode-disable)))
 

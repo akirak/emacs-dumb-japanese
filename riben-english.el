@@ -57,6 +57,7 @@
   "An input method that transliterates English to Katakana."
   :lighter "Riben-English "
   (when riben-english-mode
+    (riben-turn-off-the-other-modes 'riben-english-mode)
     (when riben-english-close-database-on-idle
       (run-with-idle-timer riben-english-close-database-on-idle nil
                            #'riben-english-close-database))

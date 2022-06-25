@@ -60,6 +60,13 @@
     (define-key m [remap self-insert-command] #'riben-self-insert-command)
     m))
 
+(defcustom riben-mutual-exclusive-modes
+  '(riben-mode
+    riben-english-mode
+    riben-katakana-mode)
+  "List of minor modes that should be turned off the other ones."
+  :type '(repeat symbol))
+
 (defcustom riben-dispatch-trigger-alist
   '((?\, . "、")
     (?. . "。")
@@ -95,11 +102,22 @@ and vanishes the space."
 (defvar riben--segment nil)
 (defvar riben--match-data nil)
 
+(defun riben-turn-off-the-other-modes (this-mode)
+  "Turn off the other modes in `riben-mutual-exclusive-modes'.
+
+This function should be manually hooked in each mode."
+  (when (memq this-mode riben-mutual-exclusive-modes)
+    (dolist (mode riben-mutual-exclusive-modes)
+      (when (and (not (eq mode this-mode))
+                 (symbol-value mode))
+        (funcall mode -1)))))
+
 ;;;###autoload
 (define-minor-mode riben-mode
   "A dumb Japanese input method."
   :lighter "Riben "
   (when riben-mode
+    (riben-turn-off-the-other-modes 'riben-mode)
     (setq deactivate-current-input-method-function
           #'riben-mode-disable)))
 
