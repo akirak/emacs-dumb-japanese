@@ -106,7 +106,8 @@
           (delete-overlay ov)
           (riben-english--translate-to-katakana begin end)
           (run-hooks 'riben-english-dispatch-hook))
-      (user-error "No overlay at point"))))
+      (user-error "No overlay at point")
+      (run-hooks 'riben-english-dispatch-hook))))
 
 (defun riben-english--translate-to-katakana (begin end)
   (let ((input (buffer-substring-no-properties begin end)))
@@ -125,7 +126,8 @@
           (delete-overlay ov)
           (riben-english--translate begin end)
           (run-hooks 'riben-english-dispatch-hook))
-      (user-error "No overlay at point"))))
+      (user-error "No overlay at point")
+      (run-hooks 'riben-english-dispatch-hook))))
 
 (defun riben-english--translate (begin end)
   (let ((input (buffer-substring-no-properties begin end)))
