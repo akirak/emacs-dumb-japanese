@@ -4,7 +4,7 @@
 
 ;;;###autoload
 (register-input-method "japanese-riben-katakana" "Japanese" #'riben-katakana-mode
-                       "日语ひらがな" "Riben Katakana ")
+                       "日语カタカナ" "Riben Katakana ")
 
 (defvar riben-katakana-mode-map
   (let ((m (make-sparse-keymap)))
