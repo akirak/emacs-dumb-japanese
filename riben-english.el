@@ -15,6 +15,10 @@
   ""
   :type 'file)
 
+(defcustom riben-english-close-database-on-idle 300
+  "Close the database connection on certain idle time in seconds."
+  :type '(choice number boolean))
+
 (defface riben-english-transient-face
   '((t (:inherit default :background "#333377")))
   "")
@@ -29,11 +33,12 @@
 (defmacro riben-english-with-database (var &rest progn)
   (declare (indent 1))
   `(let ((,var (riben-english--open-database)))
-     (unwind-protect
+     (condition-case nil
          (progn
            ,@progn)
-       (emacsql-close ,var)
-       (setq riben-english-database-connection nil))))
+       (progn
+         (emacsql-close ,var)
+         (setq riben-english-database-connection nil)))))
 
 ;;;; Japanese input
 
@@ -52,6 +57,9 @@
   "An input method that transliterates English to Katakana."
   :lighter "Riben-English "
   (when riben-english-mode
+    (when riben-english-close-database-on-idle
+      (run-with-idle-timer riben-english-close-database-on-idle nil
+                           #'riben-english-close-database))
     (setq deactivate-current-input-method-function
           #'riben-english-mode-disable)))
 
@@ -211,7 +219,8 @@
 
 (defun riben-english-close-database ()
   (when-let (conn (riben-english--live-connection))
-    (emacsql-close conn)))
+    (emacsql-close conn)
+    (setq riben-english-database-connection nil)))
 
 ;;;###autoload
 (defun riben-english-register-katakana (english katakana)
