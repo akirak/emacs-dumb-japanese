@@ -41,3 +41,4 @@ This project was originally inspired by the following projects:
 
 - [[https://github.com/igjit/ac-mozc][ac-mozc]]
 - [[http://blog.sushi.money/entry/20110421/1303274561][Google IME SKK サーバー 作った]]
+- [[https://github.com/manateelazycat/insert-translated-name][insert-translated-name]]
