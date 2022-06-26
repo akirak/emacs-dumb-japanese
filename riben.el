@@ -270,7 +270,11 @@ This function should be manually hooked in each mode."
                      (next)
                    (search-forward riben--segment)
                    (setq riben--match-data (match-data))
-                   (riben-posframe-complete (cadr x) #'confirm
+                   (riben-posframe-complete (append (thread-last
+                                                      (riben--select-nouns (car x))
+                                                      (mapcar #'car))
+                                                    (cadr x))
+                                            #'confirm
                                             :point (match-beginning 0))))
              (when (numberp forward-char)
                (forward-char forward-char))
