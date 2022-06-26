@@ -351,7 +351,8 @@ This function should be manually hooked in each mode."
                              #'riben-mode
                            (read-string (format "Furigana for %s: " text)
                                         (when begin
-                                          (riben--original begin end)))))
+                                          (riben-decode-romaji
+                                           (riben--original begin end))))))
                (annotation (minibuffer-with-setup-hook
                                #'riben-mode
                              (read-string (format "Annotation for %s: " text)))))
