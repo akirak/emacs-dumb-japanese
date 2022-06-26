@@ -38,6 +38,7 @@
 (require 'riben-google)
 (require 'riben-decode)
 (require 'riben-posframe)
+(require 'riben-database)
 (require 'text-property-search)
 (require 'thingatpt)
 
@@ -97,10 +98,17 @@ and vanishes the space."
   "List of commands that does not terminate input."
   :type '(repeat symbol))
 
+(defcustom riben-database-file
+  (locate-user-emacs-file "riben/japanese.sqlite")
+  ""
+  :type 'file)
+
 (defvar riben--counter 0)
 (defvar riben--remaining-candidates nil)
 (defvar riben--segment nil)
 (defvar riben--match-data nil)
+
+(defvar riben-database-connection nil)
 
 (defun riben-turn-off-the-other-modes (this-mode)
   "Turn off the other modes in `riben-mutual-exclusive-modes'.
@@ -285,6 +293,79 @@ This function should be manually hooked in each mode."
   "Increment the counter to confirm the last input."
   (interactive)
   (cl-incf riben--counter))
+
+;;;; Database
+
+(defun riben--open-database ()
+  (or (riben--live-connection)
+      (let ((dir (file-name-directory riben-database-file))
+            (new (not (file-exists-p riben-database-file))))
+        (unless (file-directory-p dir)
+          (make-directory dir))
+        (let ((conn (funcall riben-database-backend riben-database-file)))
+          (add-hook 'kill-emacs-hook #'riben-close-database)
+          (condition-case _
+              (progn
+                (when new
+                  (emacsql conn [:create-table-if-not-exists
+                                 nouns
+                                 ([(id integer :primary-key :autoincrement)
+                                   (japanese text :not-null)
+                                   (furigana text :not-null)
+                                   (annotation text)]
+                                  (:unique [japanese furigana]))]))
+                (setq riben-database-connection conn))
+            (error (emacsql-close conn)))))))
+
+(defun riben--open-database-if-existing ()
+  (when (or riben-database-connection
+            (and riben-database-file
+                 (file-exists-p riben-database-file)))
+    (riben--open-database)))
+
+(defun riben--live-connection ()
+  (when (and riben-database-connection
+             (emacsql-live-p riben-database-connection))
+    riben-database-connection))
+
+(defun riben-close-database ()
+  (when-let (conn (riben--live-connection))
+    (emacsql-close conn)
+    (setq riben-database-connection nil)))
+
+(defun riben-register-noun ()
+  (interactive)
+  (pcase-let* ((`(,begin . ,end) (when (use-region-p)
+                                   (car (region-bounds))))
+               (text (if begin
+                         (buffer-substring-no-properties begin end)
+                       (minibuffer-with-setup-hook
+                           #'riben-mode
+                         (read-string "Text: "))))
+               (furigana (minibuffer-with-setup-hook
+                             #'riben-mode
+                           (read-string (format "Furigana for %s: " text)
+                                        (when begin
+                                          (riben--original begin end)))))
+               (annotation (minibuffer-with-setup-hook
+                               #'riben-mode
+                             (read-string (format "Annotation for %s: " text)))))
+    (riben--register-noun text furigana annotation)))
+
+(defun riben--register-noun (text furigana &optional annotation)
+  (emacsql (riben--open-database)
+           [:insert :into nouns ([japanese furigana annotation])
+                    :values $v1]
+           (vector text furigana annotation)))
+
+(defun riben--select-nouns (furigana &optional with-annotation)
+  (when-let (database (riben--open-database-if-existing))
+    (emacsql database
+             (if with-annotation
+                 [:select [japanese annotation]
+                          :from nouns :where (= furigana $s1)]
+               [:select japanese :from nouns :where (= furigana $s1)])
+             furigana)))
 
 (provide 'riben)
 ;;; riben.el ends here
