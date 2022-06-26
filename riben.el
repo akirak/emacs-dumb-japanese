@@ -117,6 +117,7 @@ This function should be manually hooked in each mode."
   (when (memq this-mode riben-mutual-exclusive-modes)
     (dolist (mode riben-mutual-exclusive-modes)
       (when (and (not (eq mode this-mode))
+                 (boundp mode)
                  (symbol-value mode))
         (funcall mode -1)))))
 
