@@ -168,7 +168,8 @@ This function should be manually hooked in each mode."
       (`nil
        (when (thing-at-point-looking-at riben-decode-regexp 3)
          (let ((beg (match-beginning 0))
-               (end (match-end 0)))
+               (end (min (match-end 0)
+                         (point))))
            (catch 'riben-self-insert
              (while (< beg end)
                (if (eq (get-char-property beg 'riben--counter) riben--counter)
