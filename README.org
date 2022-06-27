@@ -13,14 +13,68 @@ It is not suitable for serious writers.
 It is primarily intended for daily communication at work.
 Its features are limited, and you may find it difficult to produce exact transliteration you want to express.
 The problem is not going to be solved.
+** Installation
+This repository currently contains two packages.
+
+The first one is =riben= package which consists of all elisp files but =avy-riben.el=.
+You can use the folowing recipe:
+
+#+begin_src emacs-lisp
+  (riben :fetcher github :repo "akirak/emacs-dumb-japanese"
+         :files (:defaults (:exclude "avy-riben.el")))
+#+end_src
+
+The other is =avy-riben=, which lets you jump to a point on a visible text using furigana.
+It consists of a single file =avy-riben.el=, and it depends on =riben= and [[https://github.com/abo-abo/avy][avy]]:
+
+#+begin_src emacs-lisp
+  (avy-riben :fetcher github :repo "akirak/emacs-dumb-japanese"
+             :files ("avy-riben.el"))
+#+end_src
+
+=riben= provides some features that depend on Google Translate.
+To use those features, you have to install [[https://github.com/lorniu/go-translate][go-translate]] as well.
+** Configuration
+Below is an example:
+
+#+begin_src emacs-lisp
+  ;; These keybindings are optional
+  (define-key riben-mode-map (kbd "C-j") #'riben-dispatch)
+  (define-key riben-mode-map (kbd "C-S-j") #'riben-inc-counter)
+  (define-key riben-mode-map (kbd "q") #'riben-mode-disable)
+  (define-key riben-mode-map (kbd "@") #'riben-switch-to-english-mode)
+
+  ;; Workaround for commands in `org-mode-map' and other maps.
+  (with-eval-after-load 'riben
+    (dolist (key (mapcar #'car riben-decode-punctuation-alist))
+      (define-key riben-mode-map (vector key) #'riben-self-insert-command)))
+#+end_src
 ** Usage
 Switch to =japanese-riben= input method, or turn on =riben-mode=.
 
 It transliterates the input when you press a comma, period, or space.
 
-If you need to type katakana, switch to the built-in =japanese-katakana= input method.
+Alternatively, you can transliterate any Hiragana text in a buffer by selecting the text and running =riben-dispatch= command.
+*** Typing katakana literally
+If you neeed to type katakana, you can use =riben-katakana-mode=.
+You can also use =japanese-katakana= input method which is built into Emacs, but it is not based on the same romaji scheme as riben.
+*** Producing katakana from English
+You can also produce Katakana corresponding to an English word.
+For example, you can produce "コンポーネント" by typing "component".
 
+To use this feature, turn on =riben-english-mode=, or run =riben-switch-to-english-mode= when you are inside =riben-mode=.
+Type an English word, and it is translated into katakana when you press space.
+=riben-switch-to-english-mode= makes Emacs switch back to =riben-mode= after translation, so it is convenient for including foreign words in Japanese.
+
+If the mode doesn't provide translation for a word, you can add it manually using =riben-english-register-katakana=.
+It stores translations in a SQLite database.
+*** Translating an English word into Japanese
+When you press =.= instead of space in =riben-english-mode=, the text is translated into Japanese instead of katakana.
+This could be convenient if you didn't know a Japanese word that corresponds to an English word.
+*** Jumping to Japanese
 =avy-riben= command jumps the point to text using [[https://github.com/abo-abo/avy][avy]] like [[https://github.com/momomo5717/avy-migemo][avy-migemo]] does, but without dictionary files.
+
+This depends on properties attached to text typed using =riben-mode=, so you cannot jump to text loaded from files.
 ** Caveats
 As mentioned above, this input method requires connection to a Google server.
 
@@ -41,4 +95,8 @@ This project was originally inspired by the following projects:
 
 - [[https://github.com/igjit/ac-mozc][ac-mozc]]
 - [[http://blog.sushi.money/entry/20110421/1303274561][Google IME SKK サーバー 作った]]
+
+There are some other features inspired by the following projects:
+
 - [[https://github.com/manateelazycat/insert-translated-name][insert-translated-name]]
+- [[https://github.com/skk-dev/ddskk][ddskk]]
