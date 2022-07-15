@@ -131,7 +131,7 @@
           (delete-overlay ov)
           (riben-english--translate begin end)
           (run-hooks 'riben-english-dispatch-hook))
-      (user-error "No overlay at point")
+      (message "No overlay at point")
       (run-hooks 'riben-english-dispatch-hook))))
 
 (defun riben-english--translate (begin end)
