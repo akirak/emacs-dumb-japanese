@@ -308,7 +308,7 @@ This function should be manually hooked in each mode."
         (unless (file-directory-p dir)
           (make-directory dir))
         (let ((conn (funcall riben-database-backend riben-database-file)))
-          (add-hook 'kill-emacs-hook #'riben-close-database)
+          (set-process-query-on-exit-flag (emacsql-process conn) nil)
           (condition-case _
               (progn
                 (when new

@@ -209,7 +209,7 @@
         (unless (file-directory-p dir)
           (make-directory dir))
         (let ((conn (funcall riben-database-backend riben-english-database-file)))
-          (add-hook 'kill-emacs-hook #'riben-english-close-database)
+          (set-process-query-on-exit-flag (emacsql-process conn) nil)
           (condition-case _
               (progn
                 (when new
