@@ -308,7 +308,10 @@ This function should be manually hooked in each mode."
         (unless (file-directory-p dir)
           (make-directory dir))
         (let ((conn (funcall riben-database-backend riben-database-file)))
-          (add-hook 'kill-emacs-hook #'riben-close-database)
+          ;; A sqlite connection can have a live process, which blocks
+          ;; kill-emacs. The connection should be closed by one of the functions
+          ;; in `kill-emacs-query-functions', not `kill-emacs-hook'.
+          (add-hook 'kill-emacs-query-functions #'riben-close-database)
           (condition-case _
               (progn
                 (when new
@@ -334,9 +337,12 @@ This function should be manually hooked in each mode."
     riben-database-connection))
 
 (defun riben-close-database ()
-  (when-let (conn (riben--live-connection))
-    (emacsql-close conn)
-    (setq riben-database-connection nil)))
+  ;; Returns non-nil for calling from `kill-emacs-query-functions'.
+  (if-let (conn (riben--live-connection))
+      (prog1 t
+        (emacsql-close conn)
+        (setq riben-database-connection nil))
+    t))
 
 (defun riben-register-noun ()
   (interactive)
