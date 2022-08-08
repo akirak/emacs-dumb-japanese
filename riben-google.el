@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-(require 'url-http)
+(require 'plz)
 
 (declare-function gts-google-tkk "ext:gts-engine-google")
 
@@ -49,16 +49,11 @@
 
 (cl-defun riben-google--request (input &key (langpair "ja-Hira|ja"))
   "Return transliteration of an input string."
-  (let ((buf (url-retrieve-synchronously (format "%s?langpair=%s&text=%s"
-                                                 riben-google-url langpair input)
-                                         'silent nil riben-google-timeout)))
-    (unwind-protect
-        (with-current-buffer buf
-          (when (bound-and-true-p url-http-end-of-headers)
-            (delete-region (point-min) url-http-end-of-headers))
-          (goto-char (point-min))
-          (json-parse-buffer :array-type 'list :object-type 'alist))
-      (kill-buffer buf))))
+  (plz 'get (format "%s?langpair=%s&text=%s"
+                    riben-google-url langpair input)
+    :timeout riben-google-timeout
+    :as (lambda ()
+          (json-parse-buffer :array-type 'list :object-type 'alist))))
 
 (defun riben-google-from-hiragana (input)
   (riben-google--request input))
@@ -69,34 +64,27 @@
   ;; Please install go-translate.
   (or (require 'gts-engine-google nil t)
       (error "You need to install go-translate package"))
-  (let ((buffer (url-retrieve-synchronously
-                 (format "%s?%s"
-                         riben-google-translate-url
-                         (string-join `("client=t"
-                                        "ie=UTF-8"
-                                        "oe=UTF-8"
-                                        ,(concat "sl=" source-language)
-                                        ,(concat "tl=" target-language)
-                                        ,(concat "q=" (url-hexify-string input))
-                                        "dt=bd"
-                                        "pc=1"
-                                        "otf=1"
-                                        "srcrom=1"
-                                        "ssel=0"
-                                        "tsel=0"
-                                        ,(concat "tk="
-                                                 (gts-google-tkk '(430675 . 2721866130) input)))
-                                      "&"))
-                 'silent nil)))
-    (unwind-protect
-        (with-current-buffer buffer
-          (set-buffer-multibyte t)
-          (goto-char (point-min))
-          (when (bound-and-true-p url-http-end-of-headers)
-            (delete-region (point) url-http-end-of-headers))
-          (json-parse-buffer :array-type 'list
-                             :null-object nil))
-      (kill-buffer buffer))))
+  (plz 'get (format "%s?%s"
+                    riben-google-translate-url
+                    (string-join `("client=t"
+                                   "ie=UTF-8"
+                                   "oe=UTF-8"
+                                   ,(concat "sl=" source-language)
+                                   ,(concat "tl=" target-language)
+                                   ,(concat "q=" (url-hexify-string input))
+                                   "dt=bd"
+                                   "pc=1"
+                                   "otf=1"
+                                   "srcrom=1"
+                                   "ssel=0"
+                                   "tsel=0"
+                                   ,(concat "tk="
+                                            (gts-google-tkk '(430675 . 2721866130) input)))
+                                 "&"))
+       ;; :timeout riben-google-timeout
+       :as (lambda ()
+             (json-parse-buffer :array-type 'list
+                                :null-object nil))))
 
 (defun riben-google-translate-part-of-speech (type result)
   "Select candidates that match a part of speech.
