@@ -239,13 +239,21 @@ This function should be manually hooked in each mode."
       (riben-on-region (region-beginning) (region-end))
     (when-let* ((counter (when (> (point) 1)
                            (get-char-property (1- (point)) 'riben--counter)))
-                (prop-match (save-excursion
-                              (or (text-property-search-backward
-                                   'riben--counter counter t)
-                                  (text-property-search-forward
-                                   'riben--counter counter t)))))
-      (riben--dispatch (prop-match-beginning prop-match)
-                       (prop-match-end prop-match)
+                (prop-match-beg (save-excursion
+                                  (or (text-property-search-backward
+                                       'riben--counter counter t)
+                                      (text-property-search-forward
+                                       'riben--counter counter t))))
+                (prop-match-end (or (save-excursion
+                                      (text-property-search-forward
+                                       'riben--counter counter t))
+                                    ;; If the dispatch is triggered by
+                                    ;; punctuation, the forward search will
+                                    ;; fail. Thus this result should fallback to
+                                    ;; the backward match.
+                                    prop-match-beg)))
+      (riben--dispatch (prop-match-beginning prop-match-beg)
+                       (prop-match-end prop-match-end)
                        counter arg))))
 
 (defun riben-on-region (begin end)
