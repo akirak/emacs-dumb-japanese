@@ -190,13 +190,18 @@ This function should be manually hooked in each mode."
                        (insert new)
                        (put-text-property beg (point) 'riben--counter riben--counter)
                        (put-text-property beg (1+ beg) 'riben-original orig)
-                       ;; If electric-pair-mode is turned on, the cursor will be
-                       ;; after the closing bracket, so move the cursor backward
-                       ;; by one character.
-                       (when (and (eq n 1)
-                                  (eq 40 (char-syntax c))
-                                  (eq 2 (length new)))
-                         (backward-char)))
+                       ;; Work around insertion by electric-pair-mode.
+                       (when (bound-and-true-p electric-pair-mode)
+                         (pcase (electric-pair-syntax-info c)
+                           (`(,_ ,close . ,_)
+                            (delete-char 1)
+                            (insert (riben-decode-romaji
+                                     (char-to-string close)))
+                            (backward-char)
+                            (put-text-property (point) (1+ (point))
+                                               'riben--counter riben--counter)
+                            (put-text-property (point) (1+ (point))
+                                               'riben-original (char-to-string close))))))
                      (throw 'riben-self-insert t))
                  (cl-incf beg)))))))
       (`(,_ . ,c2)
