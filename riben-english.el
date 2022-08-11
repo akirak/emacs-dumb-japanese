@@ -139,6 +139,13 @@
     (delete-region begin end)
     (riben-english-insert-translation input)))
 
+(defun riben-english-confirm ()
+  "Switch back to `riben-mode' with the current input."
+  (interactive)
+  (when-let (ov (riben-english--overlay))
+    (delete-overlay ov))
+  (riben-switch-back-from-english-mode))
+
 (defvar riben-english-alist nil)
 
 ;;;###autoload
