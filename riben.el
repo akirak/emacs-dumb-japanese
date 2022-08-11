@@ -132,15 +132,7 @@ This function should be manually hooked in each mode."
 
 (defun riben-switch-to-english-mode ()
   (interactive)
-  (if (and (> (point) (point-min))
-           (eq (get-char-property (1- (point)) 'riben--counter)
-               riben--counter))
-      (progn
-        (add-hook 'riben-dispatch-hook #'riben--switch-to-english-mode)
-        (riben-dispatch))
-    (riben--switch-to-english-mode)))
-
-(defun riben--switch-to-english-mode ()
+  (cl-incf riben--counter)
   (remove-hook 'riben-dispatch-hook #'riben--switch-to-english-mode)
   (riben-mode-disable)
   (add-hook 'riben-english-dispatch-hook #'riben-switch-back-from-english-mode)
