@@ -78,8 +78,6 @@
    :string (riben-posframe--format-candidates)
    :foreground-color (face-foreground 'riben-posframe-inactive-face nil t)
    :background-color (face-background 'riben-posframe-inactive-face nil t)
-   :height (length candidates)
-   :width (+ 4 (* 2 (apply #'max (mapcar #'length candidates))))
    :position point)
   (set-transient-map riben-posframe-map #'riben-posframe--keep-p
                      #'riben-posframe-exit))
