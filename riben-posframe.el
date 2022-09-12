@@ -40,22 +40,34 @@
     map))
 
 (defface riben-posframe-inactive-face
-  '((t (:inherit default :background "#555555" :foreground "#cccccc")))
-  "")
+  '((((class color) (min-colors 88) (background dark))
+     :background "#555555" :foreground "#cccccc")
+    (((class color) (min-colors 88) (background light))
+     :background "gray94" :foreground "black")
+    (t (:background "gray")))
+  "Face for candidates.")
 
 (defface riben-posframe-active-face
-  '((t (:inherit default :background "#99aaff" :foreground "#111111")))
-  "")
+  '((((class color) (min-colors 88) (background dark))
+     :background "#99aaff" :foreground "#111111")
+    (((class color) (min-colors 88) (background light))
+     :background "light cyan" :foreground "black")
+    (t (:background "yellow")))
+  "Face for active candidates.")
 
 (defface riben-posframe-navigation-face
-  '((t (:inherit default :background "#333333" :foreground "#dddddd")))
-  "")
+  '((((class color) (min-colors 88) (background dark))
+     :background "#333333" :foreground "#dddddd")
+    (((class color) (min-colors 88) (background light))
+     :background "gray70" :foreground "gray35")
+    (t (:background "black" :foreground "GhostWhite")))
+  "Face for the key field.")
 
 (defface riben-posframe-header-face
-  `((t (:inherit default
-                 :background ,(face-foreground 'default nil t)
-                 :foreground ,(face-background 'default nil t))))
-  "")
+  `((t
+     :background ,(face-foreground 'riben-posframe-inactive-face nil t)
+     :foreground ,(face-background 'riben-posframe-inactive-face nil t)))
+  "Face for the posframe header line.")
 
 (cl-defun riben-posframe-complete (candidates callback &key point)
   (setq riben-posframe--candidates candidates
