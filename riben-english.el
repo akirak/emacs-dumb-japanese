@@ -27,8 +27,14 @@
   :type '(choice number boolean))
 
 (defface riben-english-transient-face
-  '((t (:inherit default :background "#333377")))
-  "")
+  '((((class color) (min-colors 88) (background dark))
+     :background "#333377"
+     :foreground "white")
+    (((class color) (min-colors 88) (background light))
+     :background "khaki3"
+     :foreground "brown")
+    (t (:underline t)))
+  "Face for English input in a transient state.")
 
 (defcustom riben-english-dispatch-hook nil
   ""
