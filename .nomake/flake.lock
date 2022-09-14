@@ -3,11 +3,11 @@
     "avy": {
       "flake": false,
       "locked": {
-        "lastModified": 1641110707,
-        "narHash": "sha256-lGs7IFQvoskuRkEoN3N+rTJa3dQ/3WUL3Yj03bvMNV4=",
+        "lastModified": 1662838568,
+        "narHash": "sha256-wXjEveFoQ6K9meOvYXY6iuDT8Xw3QoVh861TXtyIGkM=",
         "owner": "abo-abo",
         "repo": "avy",
-        "rev": "ba5f035be33693d1a136a5cbeedb24327f551a92",
+        "rev": "955c8dedd68c74f3cf692c1249513f048518c4c9",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     "avy-riben": {
       "flake": false,
       "locked": {
-        "lastModified": 1656078893,
-        "narHash": "sha256-T5oxA1dZWlSbmMICIpbP/uOYJZH9haPj2YjaEOy0BL4=",
+        "lastModified": 1663000398,
+        "narHash": "sha256-0r8ouwgcTAAFL72/PsRToWwzsmBdLJ1P4rou9JzMOwE=",
         "owner": "akirak",
         "repo": "emacs-dumb-japanese",
-        "rev": "5704c990b1bced099866f84849e1cbd544b310f2",
+        "rev": "74b60671376cf5169a06064cfd1bccb5866046e8",
         "type": "github"
       },
       "original": {
@@ -64,6 +64,22 @@
         "type": "github"
       }
     },
+    "plz": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1657914511,
+        "narHash": "sha256-YtM9d8eGWrYGGdAw4PkL+ThpcRGOvAga9D9M7iNeF5w=",
+        "owner": "alphapapa",
+        "repo": "plz.el",
+        "rev": "9e9a370830a879592a4c6c9e66a5e9ec9f27d698",
+        "type": "github"
+      },
+      "original": {
+        "owner": "alphapapa",
+        "repo": "plz.el",
+        "type": "github"
+      }
+    },
     "posframe": {
       "flake": false,
       "locked": {
@@ -83,11 +99,11 @@
     "riben": {
       "flake": false,
       "locked": {
-        "lastModified": 1656078893,
-        "narHash": "sha256-T5oxA1dZWlSbmMICIpbP/uOYJZH9haPj2YjaEOy0BL4=",
+        "lastModified": 1663000398,
+        "narHash": "sha256-0r8ouwgcTAAFL72/PsRToWwzsmBdLJ1P4rou9JzMOwE=",
         "owner": "akirak",
         "repo": "emacs-dumb-japanese",
-        "rev": "5704c990b1bced099866f84849e1cbd544b310f2",
+        "rev": "74b60671376cf5169a06064cfd1bccb5866046e8",
         "type": "github"
       },
       "original": {
@@ -102,6 +118,7 @@
         "avy-riben": "avy-riben",
         "emacsql": "emacsql",
         "emacsql-sqlite": "emacsql-sqlite",
+        "plz": "plz",
         "posframe": "posframe",
         "riben": "riben"
       }

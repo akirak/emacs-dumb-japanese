@@ -26,6 +26,12 @@
       repo = "emacsql";
       type = "github";
     };
+    plz = {
+      flake = false;
+      owner = "alphapapa";
+      repo = "plz.el";
+      type = "github";
+    };
     posframe = {
       flake = false;
       owner = "tumashu";
