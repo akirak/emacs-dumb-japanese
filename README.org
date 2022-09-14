@@ -78,16 +78,16 @@ This depends on properties attached to text typed using =riben-mode=, so you can
 ** Caveats
 As mentioned above, this input method requires connection to a Google server.
 
-It should be also noted that =riben-mode= remaps =self-insert-command=.
-It does not work if you are using another minor mode that remaps =self-insert-command= for letter keys, like [[https://github.com/abo-abo/lispy][lispy]].
-I personally don't take this issue seriously, because I have never experienced a situation where I need to turn on both modes.
+It should also be noted that =riben-mode= remaps =self-insert-command=.
+It does not work if you are using another minor mode that remaps =self-insert-command= for letter keys, like [[https://github.com/abo-abo/lispy][lispy]] does.
+I personally don't take this issue seriously, because I have never experienced a situation where I need to write Japanese in =emacs-lisp-mode=.
 ** Alternatives
 As far I know, there are a couple of Japanese input methods for Emacs that are actively developed:
 
 - [[https://github.com/skk-dev/ddskk/][DDSKK]], which requires dictionaries
 - [[https://github.com/google/mozc/][Mozc]] (a.k.a. Google Japanese Input), which requires a binary
 
-Another option would be [[https://github.com/gkovacs/rime-japanese][rime-japanese]], which is a schema for the [[https://github.com/rime][RIME]] input engine, which is primarily developed for Chinese speaking people.
+Another option is [[https://github.com/gkovacs/rime-japanese][rime-japanese]], which is a schema for the [[https://github.com/rime][RIME]] input engine, which is primarily developed for Chinese speaking people.
 [[https://github.com/tumashu/pyim][PYIM]] supports rime, so it would be possible to use rime-japanese via pyim.
 Unfortunately, these options are relatively hard to set up, and it does not officially support Emacs 29 yet.
 ** Inspirations
