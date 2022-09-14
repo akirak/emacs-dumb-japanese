@@ -43,6 +43,8 @@
 (require 'thingatpt)
 
 (declare-function riben-english-mode "riben-english")
+(declare-function riben--switch-to-english-mode "riben-english")
+(declare-function electric-pair-syntax-info "elec-pair")
 
 (defgroup riben nil
   "A dumb Japanese input method."
@@ -132,6 +134,7 @@ This function should be manually hooked in each mode."
 
 (defun riben-switch-to-english-mode ()
   (interactive)
+  (require 'riben-english)
   (cl-incf riben--counter)
   (remove-hook 'riben-dispatch-hook #'riben--switch-to-english-mode)
   (riben-mode-disable)
