@@ -163,11 +163,14 @@ This function should be manually hooked in each mode."
               (memq last-command riben-continue-commands))
     (cl-incf riben--counter))
   (self-insert-command n c)
-  (put-text-property (- (point) n)
-                     (point)
-                     'riben--counter
-                     riben--counter)
   (let ((c (char-after (1- (point)))))
+    ;; Don't add properties to characters that shouldn't be transliterated.
+    ;; At present, this is only spaces.
+    (unless (eq c ?\s)
+      (put-text-property (- (point) n)
+                         (point)
+                         'riben--counter
+                         riben--counter))
     (pcase (assq c riben-dispatch-trigger-alist)
       (`nil
        (when (thing-at-point-looking-at riben-decode-regexp 3)
