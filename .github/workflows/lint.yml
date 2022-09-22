@@ -38,9 +38,9 @@ jobs:
       run: |
         emacs -batch -l bytecomp -l package --eval "(push '(\"melpa\" . \"https://melpa.org/packages/\") package-archives)" --eval "(package-initialize)" -L . \
           --eval "(setq byte-compile-error-on-warn t)" \
-          -f batch-byte-compile 'org-riben.el' 'riben-database.el' 'riben-decode.el' 'riben-english.el' 'riben-google.el' 'riben-katakana.el' 'riben-posframe.el' 'riben.el' 'avy-riben.el'
+          -f batch-byte-compile 'riben-database.el' 'riben-decode.el' 'riben-english.el' 'riben-google.el' 'riben-katakana.el' 'riben-posframe.el' 'riben.el'
     - run: |
         emacs -l package --eval "(push '(\"melpa\" . \"https://melpa.org/packages/\") package-archives)" --eval "(package-initialize)" -L . -batch -l package-lint \
           --eval "(setq package-lint-main-file \"riben.el\")" \
-          -f package-lint-batch-and-exit 'org-riben.el' 'riben-database.el' 'riben-decode.el' 'riben-english.el' 'riben-google.el' 'riben-katakana.el' 'riben-posframe.el' 'riben.el' 'avy-riben.el'
+          -f package-lint-batch-and-exit 'riben-database.el' 'riben-decode.el' 'riben-english.el' 'riben-google.el' 'riben-katakana.el' 'riben-posframe.el' 'riben.el'
       name: Run package-lint
