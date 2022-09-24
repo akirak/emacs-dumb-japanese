@@ -59,7 +59,7 @@
 (register-input-method "japanese-riben-english"
                        "Japanese"
                        #'riben-english-mode
-                       "英语翻译"
+                       "翻译成日文"
                        "Riben-English ")
 
 (defvar riben-english-mode-map
