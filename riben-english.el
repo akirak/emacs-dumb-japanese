@@ -207,9 +207,9 @@
   (thread-last
     (riben-google--translate input)
     (riben-google-translate-part-of-speech "noun")
-    (cl-remove-if-not #'riben-english-p)))
+    (cl-remove-if-not #'riben-english-katakana-p)))
 
-(defun riben-english-p (string)
+(defun riben-english-katakana-p (string)
   (string-match-p (rx bos (+ (category japanese-katakana-two-byte)) eos)
                   string))
 
