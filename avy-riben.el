@@ -61,7 +61,7 @@
 (defun avy-riben--read-string ()
   "Read a string."
   ;; `avy--read-candidates' would fire too many API requests for this use case,
-  ;; so we had better implement an alternative.
+  ;; so it's better to implement an alternative.
   (let (str char)
     (while (setq char (read-char (format "Char (%s): " (or str ""))
                                  nil
