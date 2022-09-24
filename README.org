@@ -9,10 +9,9 @@ You can use it in Japan and most of the other countries.
 ** Rationale
 The goal of this project is to provide a Japanese input method that requires minimal dependencies but is still usable.
 
-It is not suitable for serious writers.
 It is primarily intended for daily communication at work.
 Its features are limited, and you may find it difficult to produce exact transliteration you want to express.
-The problem is not going to be solved.
+It is not a goal of this project to support authors of Japanese literature.
 ** Installation
 This repository currently contains two packages.
 
