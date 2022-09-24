@@ -7,7 +7,7 @@ About the name: Rìběn means Japan in Mandarin Chinese.
 Since this input method requires connection to Google, it is unlikely you can use it in the mainland China.
 You can use it in Japan and most of the other countries.
 ** Rationale
-The goal of this project is to provide a Japanese input method that has minimal dependencies but is still usable.
+The goal of this project is to provide a Japanese input method that requires minimal dependencies but is still usable.
 
 It is not suitable for serious writers.
 It is primarily intended for daily communication at work.
