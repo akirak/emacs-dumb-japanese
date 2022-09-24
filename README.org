@@ -73,8 +73,6 @@ When you press =.= instead of space in =riben-english-mode=, the text is transla
 This could be convenient if you didn't know a Japanese word that corresponds to an English word.
 *** Jumping to Japanese
 =avy-riben= command jumps the point to text using [[https://github.com/abo-abo/avy][avy]] like [[https://github.com/momomo5717/avy-migemo][avy-migemo]] does, but without dictionary files.
-
-This depends on properties attached to text typed using =riben-mode=, so you cannot jump to text loaded from files.
 ** Caveats
 As mentioned above, this input method requires connection to a Google server.
 
