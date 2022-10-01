@@ -63,13 +63,13 @@ For example, you can produce "コンポーネント" by typing "component".
 
 To use this feature, turn on =riben-english-mode=, or run =riben-switch-to-english-mode= when you are inside =riben-mode=.
 Type an English word, and it is translated into katakana when you press space.
-=riben-switch-to-english-mode= makes Emacs switch back to =riben-mode= after translation, so it is convenient for including foreign words in Japanese.
+=riben-switch-to-english-mode= makes Emacs switch back to =riben-mode= after translation, so it is convenient if you want to include foreign words in Japanese.
 
 If the mode doesn't provide translation for a word, you can add it manually using =riben-english-register-katakana=.
 It stores translations in a SQLite database.
 *** Translating an English word into Japanese
-When you press =.= instead of space in =riben-english-mode=, the text is translated into Japanese instead of katakana.
-This could be convenient if you didn't know a Japanese word that corresponds to an English word.
+If you press =.= instead of space in =riben-english-mode=, you can choose which Japanese translation to insert into the buffer.
+This can be convenient if you don't remember the Japanese translation for an English word.
 *** Jumping to Japanese
 =avy-riben= command jumps the point to text using [[https://github.com/abo-abo/avy][avy]] like [[https://github.com/momomo5717/avy-migemo][avy-migemo]] does, but without dictionary files.
 ** Caveats
