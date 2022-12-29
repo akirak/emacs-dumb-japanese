@@ -189,12 +189,13 @@
     (candidates
      (riben-posframe-complete candidates #'insert))))
 
-(defun riben-english--prompt-new-word (word)
+(defun riben-english--prompt-new-word (word &optional initial)
   "Register a new WORD."
   (minibuffer-with-setup-hook
       (lambda ()
         (riben-katakana-mode t))
-    (read-string (format "%s: " word))))
+    (read-from-minibuffer (format "Katakana transliteration of \"%s\": " word)
+                          initial)))
 
 (defun riben-english--all-candidates (input)
   (thread-last
@@ -245,7 +246,11 @@
 ;;;###autoload
 (defun riben-english-register-katakana (english katakana)
   (interactive (let* ((english (read-string "English: "))
-                      (katakana (riben-english--prompt-new-word english)))
+                      (katakana (riben-english--prompt-new-word
+                                 english
+                                 (when (use-region-p)
+                                   (buffer-substring-no-properties
+                                    (region-beginning) (region-end))))))
                  (list english katakana)))
   (riben-english-with-database db
     (riben-english--record db english katakana)))
