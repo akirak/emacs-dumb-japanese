@@ -43,6 +43,10 @@
 
 (declare-function riben-english-mode "riben-english")
 (declare-function electric-pair-syntax-info "elec-pair")
+(declare-function emacsql "ext:emacsql")
+(declare-function emacsql-live-p "ext:emacsql")
+(declare-function emacsql-close "ext:emacsql")
+(declare-function emacsql-sqlite "ext:emacsql-sqlite")
 
 (defgroup riben nil
   "A dumb Japanese input method."

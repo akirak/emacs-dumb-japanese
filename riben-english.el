@@ -4,6 +4,8 @@
 (require 'riben-katakana)
 (require 'emacsql)
 
+(declare-function emacsql-sqlite "ext:emacsql-sqlite")
+
 (defgroup riben-english nil
   "A Japanese input method that translates English."
   :prefix "riben-english-"
