@@ -42,7 +42,6 @@
 (require 'thingatpt)
 
 (declare-function riben-english-mode "riben-english")
-(declare-function riben--switch-to-english-mode "riben-english")
 (declare-function electric-pair-syntax-info "elec-pair")
 
 (defgroup riben nil
@@ -135,7 +134,7 @@ This function should be manually hooked in each mode."
   (interactive)
   (require 'riben-english)
   (cl-incf riben--counter)
-  (remove-hook 'riben-dispatch-hook #'riben--switch-to-english-mode)
+  (remove-hook 'riben-dispatch-hook #'riben-switch-to-english-mode)
   (riben-mode-disable)
   (add-hook 'riben-english-dispatch-hook #'riben-switch-back-from-english-mode)
   (riben-english-mode))
