@@ -4,7 +4,7 @@
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (posframe "1.1") (emacsql "3.0") (emacsql-sqlite "1.0") (plz "0.1"))
+;; Package-Requires: ((emacs "27.1") (posframe "1.1") (emacsql "3.1") (emacsql-sqlite "3.1") (plz "0.1"))
 ;; URL: https://github.com/akirak/emacs-dumb-japanese
 
 ;; This file is not part of GNU Emacs.
@@ -38,7 +38,6 @@
 (require 'riben-google)
 (require 'riben-decode)
 (require 'riben-posframe)
-(require 'riben-database)
 (require 'text-property-search)
 (require 'thingatpt)
 
@@ -318,8 +317,7 @@ This function should be manually hooked in each mode."
             (new (not (file-exists-p riben-database-file))))
         (unless (file-directory-p dir)
           (make-directory dir))
-        (let ((conn (funcall riben-database-backend riben-database-file)))
-          (set-process-query-on-exit-flag (emacsql-process conn) nil)
+        (let ((conn (emacsql-sqlite riben-database-file)))
           (condition-case _
               (progn
                 (when new

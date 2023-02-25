@@ -2,7 +2,6 @@
 
 (require 'riben-google)
 (require 'riben-katakana)
-(require 'riben-database)
 (require 'emacsql)
 
 (defgroup riben-english nil
@@ -222,8 +221,7 @@
             (new (not (file-exists-p riben-english-database-file))))
         (unless (file-directory-p dir)
           (make-directory dir))
-        (let ((conn (funcall riben-database-backend riben-english-database-file)))
-          (set-process-query-on-exit-flag (emacsql-process conn) nil)
+        (let ((conn (emacsql-sqlite riben-english-database-file)))
           (condition-case _
               (progn
                 (when new
