@@ -19,11 +19,11 @@
     "avy-riben": {
       "flake": false,
       "locked": {
-        "lastModified": 1663000398,
-        "narHash": "sha256-0r8ouwgcTAAFL72/PsRToWwzsmBdLJ1P4rou9JzMOwE=",
+        "lastModified": 1672302795,
+        "narHash": "sha256-DX+pmQ94sA4N+UYYRZEQ+2bv1G2ZDUYF6vBXjX6y+60=",
         "owner": "akirak",
         "repo": "emacs-dumb-japanese",
-        "rev": "74b60671376cf5169a06064cfd1bccb5866046e8",
+        "rev": "4fdda5f259f720f4b0c1b6cc67bdc8ade29ddb19",
         "type": "github"
       },
       "original": {
@@ -35,11 +35,11 @@
     "emacsql": {
       "flake": false,
       "locked": {
-        "lastModified": 1649434493,
-        "narHash": "sha256-mkTCzBrq8ny40j//ZoNdZiH1rEZM08b9DkBcDGCQilw=",
+        "lastModified": 1677240082,
+        "narHash": "sha256-1BzGi6JcrF98DiNpdajbL8JhqWuXwvPcBSCdDpHsrMo=",
         "owner": "skeeto",
         "repo": "emacsql",
-        "rev": "373975cbccf7776af771e23f86043b236a330702",
+        "rev": "7c533fb6c27c3a10b6ab05bddf663e37c109e459",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
     "emacsql-sqlite": {
       "flake": false,
       "locked": {
-        "lastModified": 1649434493,
-        "narHash": "sha256-mkTCzBrq8ny40j//ZoNdZiH1rEZM08b9DkBcDGCQilw=",
+        "lastModified": 1677240082,
+        "narHash": "sha256-1BzGi6JcrF98DiNpdajbL8JhqWuXwvPcBSCdDpHsrMo=",
         "owner": "skeeto",
         "repo": "emacsql",
-        "rev": "373975cbccf7776af771e23f86043b236a330702",
+        "rev": "7c533fb6c27c3a10b6ab05bddf663e37c109e459",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
     "plz": {
       "flake": false,
       "locked": {
-        "lastModified": 1657914511,
-        "narHash": "sha256-YtM9d8eGWrYGGdAw4PkL+ThpcRGOvAga9D9M7iNeF5w=",
+        "lastModified": 1675814673,
+        "narHash": "sha256-tAagmxiKMLN7yb6X4xEALt5WPaUuYU4tlC5siTQODqM=",
         "owner": "alphapapa",
         "repo": "plz.el",
-        "rev": "9e9a370830a879592a4c6c9e66a5e9ec9f27d698",
+        "rev": "d9600cd5d6fb6e9d5dca9c1f95e0ad965570e4b9",
         "type": "github"
       },
       "original": {
@@ -83,11 +83,11 @@
     "posframe": {
       "flake": false,
       "locked": {
-        "lastModified": 1653697654,
-        "narHash": "sha256-XKxFg6Wy1xpgcdliJOaDq4nP8hH4EuoQgaMmGqCfgtw=",
+        "lastModified": 1677027214,
+        "narHash": "sha256-YWZPZznkJPy8H3k1c26nuRxzj7kqImsfor9pPDuDIMM=",
         "owner": "tumashu",
         "repo": "posframe",
-        "rev": "0d23bc5f7cfac00277d83ae7ba52c48685bcbc68",
+        "rev": "dace2dcf105e9685b4085836645b3392dc7e2211",
         "type": "github"
       },
       "original": {
@@ -99,11 +99,11 @@
     "riben": {
       "flake": false,
       "locked": {
-        "lastModified": 1663000398,
-        "narHash": "sha256-0r8ouwgcTAAFL72/PsRToWwzsmBdLJ1P4rou9JzMOwE=",
+        "lastModified": 1672302795,
+        "narHash": "sha256-DX+pmQ94sA4N+UYYRZEQ+2bv1G2ZDUYF6vBXjX6y+60=",
         "owner": "akirak",
         "repo": "emacs-dumb-japanese",
-        "rev": "74b60671376cf5169a06064cfd1bccb5866046e8",
+        "rev": "4fdda5f259f720f4b0c1b6cc67bdc8ade29ddb19",
         "type": "github"
       },
       "original": {
