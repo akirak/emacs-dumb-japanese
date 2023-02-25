@@ -42,11 +42,11 @@
 (require 'thingatpt)
 
 (declare-function riben-english-mode "riben-english")
+(declare-function riben-sqlite-open "riben-sqlite")
 (declare-function electric-pair-syntax-info "elec-pair")
 (declare-function emacsql "ext:emacsql")
 (declare-function emacsql-live-p "ext:emacsql")
 (declare-function emacsql-close "ext:emacsql")
-(declare-function emacsql-sqlite "ext:emacsql-sqlite")
 
 (defgroup riben nil
   "A dumb Japanese input method."
@@ -315,12 +315,13 @@ This function should be manually hooked in each mode."
 ;;;; Database
 
 (defun riben--open-database ()
+  (require 'riben-sqlite)
   (or (riben--live-connection)
       (let ((dir (file-name-directory riben-database-file))
             (new (not (file-exists-p riben-database-file))))
         (unless (file-directory-p dir)
           (make-directory dir))
-        (let ((conn (emacsql-sqlite riben-database-file)))
+        (let ((conn (riben-sqlite-open riben-database-file)))
           (condition-case _
               (progn
                 (when new
