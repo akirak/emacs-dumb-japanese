@@ -1,4 +1,4 @@
-;;; riben-decode.el --- Decode from Japanese romaji to hiragana
+;;; riben-decode.el --- Decode from Japanese romaji to hiragana -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2018,2022 by Akira Komamura
 
