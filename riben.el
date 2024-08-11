@@ -4,7 +4,7 @@
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1") (posframe "1.1") (emacsql "3.1") (emacsql-sqlite "3.1") (plz "0.1"))
+;; Package-Requires: ((emacs "29.1") (posframe "1.1") (emacsql "3.1.1") (plz "0.1"))
 ;; URL: https://github.com/akirak/emacs-dumb-japanese
 
 ;; This file is not part of GNU Emacs.
