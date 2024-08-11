@@ -90,7 +90,7 @@
   (if-let (func (cdr (assq (char-after (1- (point)))
                            riben-english-dispatcher-alist)))
       (progn
-        (backward-delete-char n)
+        (delete-char (- n))
         (funcall func))
     (if-let (ov (riben-english--overlay (- (point) n)))
         (setf (overlay-end ov) (point))

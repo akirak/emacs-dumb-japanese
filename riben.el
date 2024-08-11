@@ -207,14 +207,14 @@ This function should be manually hooked in each mode."
       (`(,_ . ,c2)
        (if (eq (get-char-property (- (point) 2) 'riben--counter) riben--counter)
            (progn
-             (backward-delete-char n)
+             (delete-char (- n))
              (when c2
                (insert c2)
                (backward-char))
              (when (eq riben--counter (get-char-property (1- (point)) 'riben--counter))
                (riben-dispatch (when c2 1))))
          (when c2
-           (backward-delete-char n)
+           (delete-char (- n))
            (when c2
              (insert c2))))))))
 
