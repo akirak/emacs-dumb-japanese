@@ -1,0 +1,68 @@
+{
+  "avy": {
+    "author": "Oleh Krehel <ohwoeowho@gmail.com>",
+    "meta": {
+      "description": "Jump to arbitrary positions in visible text and select text quickly.",
+      "homepage": "https://github.com/abo-abo/avy"
+    },
+    "narHash": "sha256-cZxerGMWKlKSrTEDkQh7cSY3185CmccMjlCXYEssZi8=",
+    "packageRequires": {
+      "cl-lib": "0.5",
+      "emacs": "24.1"
+    },
+    "version": "0.5.0"
+  },
+  "emacsql": {
+    "author": "Christopher Wellons <wellons@nullprogram.com>",
+    "meta": {
+      "description": "High-level SQL database front-end",
+      "license": {
+        "deprecated": false,
+        "free": true,
+        "fullName": "The Unlicense",
+        "redistributable": true,
+        "shortName": "unlicense",
+        "spdxId": "Unlicense",
+        "url": "https://spdx.org/licenses/Unlicense.html"
+      },
+      "maintainers": [
+        "Jonas Bernoulli <emacs.emacsql@jonas.bernoulli.dev>"
+      ]
+    },
+    "narHash": "sha256-lfo5r2bjFOx5SuzasnCxKbPs/tw2DLfQKUyfEdQsyu4=",
+    "packageRequires": {
+      "emacs": "25.1"
+    },
+    "version": "4.0.0"
+  },
+  "plz": {
+    "author": "Adam Porter <adam@alphapapa.net>",
+    "meta": {
+      "description": "HTTP library",
+      "homepage": "https://github.com/alphapapa/plz.el",
+      "maintainers": [
+        "Adam Porter <adam@alphapapa.net>"
+      ]
+    },
+    "narHash": "sha256-mF0gNQJ1StIpkcoHxYy/cImdDvFfjOAd5GSjC6HUdLg=",
+    "packageRequires": {
+      "emacs": "27.1"
+    },
+    "version": "0.9"
+  },
+  "posframe": {
+    "author": "Feng Shu <tumashu@163.com>",
+    "meta": {
+      "description": "Pop a posframe (just a frame) at point",
+      "homepage": "https://github.com/tumashu/posframe",
+      "maintainers": [
+        "Feng Shu <tumashu@163.com>"
+      ]
+    },
+    "narHash": "sha256-VBV320Y9JelNlOGV9TB5hOAP90cxQ0SIhqVyBEufV/o=",
+    "packageRequires": {
+      "emacs": "26.1"
+    },
+    "version": "1.4.3"
+  }
+}
