@@ -29,7 +29,7 @@
 
 (require 'plz)
 
-(declare-function gts-google-tkk "ext:gts-engine-google")
+(declare-function gt-google-tkk "ext:gt-engine-google")
 
 (defcustom riben-google-url "https://www.google.com/transliterate"
   "Endpoint url."
@@ -62,7 +62,7 @@
                                          (source-language "en")
                                          (target-language "ja"))
   ;; Please install go-translate.
-  (or (require 'gts-engine-google nil t)
+  (or (require 'go-translate nil t)
       (error "You need to install go-translate package"))
   (plz 'get (format "%s?%s"
                     riben-google-translate-url
@@ -79,7 +79,7 @@
                                    "ssel=0"
                                    "tsel=0"
                                    ,(concat "tk="
-                                            (gts-google-tkk '(430675 . 2721866130) input)))
+                                            (gt-google-tkk '(430675 . 2721866130) input)))
                                  "&"))
        ;; :timeout riben-google-timeout
        :as (lambda ()
