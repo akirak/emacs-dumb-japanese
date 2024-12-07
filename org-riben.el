@@ -45,7 +45,7 @@ you can automatically record the yomigana when you fire
                        result))
                (setq value (get-char-property (point) 'riben-original)
                      last-pos (point))
-               (if-let (pos (next-char-property-change (point) end))
+               (if-let* ((pos (next-char-property-change (point) end)))
                    (goto-char pos)
                  (throw 'yomigana nil))))
            (org-entry-put nil org-riben-yomigana-property
@@ -76,7 +76,7 @@ you can automatically record the yomigana when you fire
                           '(metadata . ((category . riben)
                                         (annotation-function . ,ann-func)))
                         (complete-with-action action ',items string pred)))))))
-    (if-let (cell (assoc input alist))
+    (if-let* ((cell (assoc input alist)))
         (cadr cell)
       input)))
 

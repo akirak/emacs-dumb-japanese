@@ -222,10 +222,10 @@ This function should be manually hooked in each mode."
 (defun riben-insert-from-minibuffer ()
   "Insert Japanese from the minibuffer."
   (interactive)
-  (when-let (input (minibuffer-with-setup-hook
-                       (lambda ()
-                         (riben-mode t))
-                     (read-from-minibuffer "" nil nil nil nil nil nil)))
+  (when-let* ((input (minibuffer-with-setup-hook
+                         (lambda ()
+                           (riben-mode t))
+                       (read-from-minibuffer "" nil nil nil nil nil nil))))
     (insert input)))
 
 (defun riben-clear-properties ()
@@ -277,7 +277,7 @@ This function should be manually hooked in each mode."
                (next))))
          (next
            ()
-           (if-let (x (pop riben--remaining-candidates))
+           (if-let* ((x (pop riben--remaining-candidates)))
                (progn
                  (setq riben--segment (car x))
                  (if (string-match-p (rx bol (+ space) eol) riben--segment)
@@ -347,7 +347,7 @@ This function should be manually hooked in each mode."
     riben-database-connection))
 
 (defun riben-close-database ()
-  (when-let (conn (riben--live-connection))
+  (when-let* ((conn (riben--live-connection)))
     (emacsql-close conn)
     (setq riben-database-connection nil)))
 
@@ -378,7 +378,7 @@ This function should be manually hooked in each mode."
            (vector text furigana annotation)))
 
 (defun riben--select-nouns (furigana &optional with-annotation)
-  (when-let (database (riben--open-database-if-existing))
+  (when-let* ((database (riben--open-database-if-existing)))
     (emacsql database
              (if with-annotation
                  [:select [japanese annotation]

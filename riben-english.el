@@ -87,12 +87,12 @@
 (defun riben-english-self-insert (n &optional c)
   (interactive "p")
   (self-insert-command n c)
-  (if-let (func (cdr (assq (char-after (1- (point)))
-                           riben-english-dispatcher-alist)))
+  (if-let* ((func (cdr (assq (char-after (1- (point)))
+                           riben-english-dispatcher-alist))))
       (progn
         (delete-char (- n))
         (funcall func))
-    (if-let (ov (riben-english--overlay (- (point) n)))
+    (if-let* ((ov (riben-english--overlay (- (point) n))))
         (setf (overlay-end ov) (point))
       (let ((ov (make-overlay (- (point) n) (point))))
         (overlay-put ov 'face 'riben-english-transient-face)
@@ -111,7 +111,7 @@
       (save-excursion
         (riben-english--translate-to-katakana (region-beginning)
                                               (region-end)))
-    (if-let (ov (riben-english--overlay))
+    (if-let* ((ov (riben-english--overlay)))
         (let ((begin (overlay-start ov))
               (end (overlay-end ov)))
           (delete-overlay ov)
@@ -132,7 +132,7 @@
       (save-excursion
         (riben-english--translate (region-beginning)
                                   (region-end)))
-    (if-let (ov (riben-english--overlay))
+    (if-let* ((ov (riben-english--overlay)))
         (let ((begin (overlay-start ov))
               (end (overlay-end ov)))
           (delete-overlay ov)
@@ -149,7 +149,7 @@
 (defun riben-english-confirm ()
   "Switch back to `riben-mode' with the current input."
   (interactive)
-  (when-let (ov (riben-english--overlay))
+  (when-let* ((ov (riben-english--overlay)))
     (delete-overlay ov))
   (riben-switch-back-from-english-mode))
 
@@ -159,7 +159,7 @@
 (defun riben-english-insert (input)
   (interactive "sEnglish: ")
   (riben-english-with-database db
-    (if-let (existing (riben-english--lookup db input))
+    (if-let* ((existing (riben-english--lookup db input)))
         (insert existing)
       (pcase (riben-english--katakana-candidates input)
         (`(,sole)
@@ -240,7 +240,7 @@
     riben-english-database-connection))
 
 (defun riben-english-close-database ()
-  (when-let (conn (riben-english--live-connection))
+  (when-let* ((conn (riben-english--live-connection)))
     (emacsql-close conn)
     (setq riben-english-database-connection nil)))
 
