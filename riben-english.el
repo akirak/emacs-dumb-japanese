@@ -2,9 +2,7 @@
 
 (require 'riben-google)
 (require 'riben-katakana)
-(require 'emacsql)
-
-(declare-function riben-sqlite-open "riben-sqlite")
+(require 'emacsql-sqlite-builtin)
 
 (defgroup riben-english nil
   "A Japanese input method that translates English."
@@ -224,7 +222,7 @@
             (new (not (file-exists-p riben-english-database-file))))
         (unless (file-directory-p dir)
           (make-directory dir))
-        (let ((conn (riben-sqlite-open riben-english-database-file)))
+        (let ((conn (emacsql-sqlite-builtin riben-english-database-file)))
           (condition-case _
               (progn
                 (when new
