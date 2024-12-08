@@ -216,7 +216,6 @@
 ;;;; Database
 
 (defun riben-english--open-database ()
-  (require 'riben-sqlite)
   (or (riben-english--live-connection)
       (let ((dir (file-name-directory riben-english-database-file))
             (new (not (file-exists-p riben-english-database-file))))
