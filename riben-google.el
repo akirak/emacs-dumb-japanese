@@ -62,7 +62,7 @@
                                          (source-language "en")
                                          (target-language "ja"))
   ;; Please install go-translate.
-  (or (require 'go-translate nil t)
+  (or (require 'gt nil t)
       (error "You need to install go-translate package"))
   (plz 'get (format "%s?%s"
                     riben-google-translate-url
